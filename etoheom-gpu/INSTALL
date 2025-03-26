@@ -1,0 +1,11 @@
+Requirements:
+CUDA: https://developer.nvidia.com/cuda-12-3-0-download-archive
+cublas: https://developer.nvidia.com/cublas
+SciPy: https://scipy.org/install/
+NumPy: https://numpy.org/install/
+matplotlib: https://matplotlib.org/stable/install/index.html
+
+Installation:
+1. Check lib/Makefile, src/Makefile and script/Run_GPU_2DES, and modify PATHs accordingly.
+2. cd lib; make clean; make
+3. cd ../src ; make clean ; make

@@ -1,0 +1,10 @@
+Requirements:
+GSL: https://www.gnu.org/software/gsl/
+SciPy: https://scipy.org/install/
+NumPy: https://numpy.org/install/
+matplotlib: https://matplotlib.org/stable/install/index.html
+
+Installation:
+1. Check lib/Makefile, src/Makefile and script/Run_CPU_2DES, and modify PATHs accordingly.
+2. cd lib; make clean; make
+3. cd ../src ; make clean ; make
