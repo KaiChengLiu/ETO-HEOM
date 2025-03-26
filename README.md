@@ -34,5 +34,3 @@ For instructions on installation, configuration, and how to set up and process j
 
 ---
 
-## Directory Overview
-
