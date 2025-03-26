@@ -6,7 +6,7 @@ This document provides system requirements, build instructions, and job setup pr
 
 ## System Requirements
 
-The codebase is developed for Linux systems with support for both CPU and NVIDIA GPU execution.
+The code is developed for Linux systems with support for both CPU and NVIDIA GPU execution.
 
 ### Required Software
 
@@ -19,8 +19,9 @@ The codebase is developed for Linux systems with support for both CPU and NVIDIA
 | SciPy          | 1.11.1     |
 | Matplotlib     | 3.7.1      |
 
-> GSL is required to compile the C++/CUDA-based HEOM solvers.  
-> Python and associated libraries are required to generate input files and visualize results.
+> GSL is required to CPU HEOM solvers calculation.
+> CUDA is required to GPU HEOM solvers calculation.
+> Python and associated libraries are required to generate visualize results.
 
 ---
 
@@ -141,4 +142,4 @@ To remove all generated input and output files:
 This deletes:
 
 - `2d-input/*.key`
-- `2d-output/*.out`
+- `2d-output/*.out` 
