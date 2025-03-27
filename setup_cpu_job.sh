@@ -37,6 +37,7 @@ cp "$HOME_PATH/ETO-HEOM/gen-2d-spectrum/gen_2d_spectrum.py" "$FOLDER_NAME/"
 cp "$HOME_PATH/ETO-HEOM/script/IO-scripts/gen_2d_data.sh" "$FOLDER_NAME/"
 cp "$HOME_PATH/ETO-HEOM/script/IO-scripts/clean_2d_data.sh" "$FOLDER_NAME/"
 cp "$HOME_PATH/ETO-HEOM/script/cpu-script/submit_jobs.sh" "$FOLDER_NAME/"
+cp "$HOME_PATH/ETO-HEOM/usage/README.md" "$FOLDER_NAME/"
 cp "$HOME_PATH/ETO-HEOM/etom/${BATHTYPE}_ETOM.py" "$FOLDER_NAME/"
 
 # Modify submit_jobs.sh to hardcode the full folder name as JOBNAME
