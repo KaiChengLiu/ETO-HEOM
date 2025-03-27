@@ -97,7 +97,7 @@ def original_function_real(t):
         integrand_real, 0, np.inf, args=(t,),
         epsabs=1e-10, epsrel=1e-10, limit=10_000_000
     )
-    return integral * np.pi
+    return integral / np.pi
 
 def original_function_imag(t):
     """
@@ -120,7 +120,7 @@ def original_function_imag(t):
         integrand_imag, 0, np.inf, args=(t,),
         epsabs=1e-10, epsrel=1e-10, limit=10_000_000
     )
-    return integral * np.pi
+    return integral / np.pi
 
 # Define fit function using multiple bases
 def fit_function_real(t, *params):
