@@ -24,7 +24,7 @@ non_rephaasing_data = np.zeros((size1, size2), dtype=np.complex128)
 
 #loading non-rephasing data
 for i, tau in enumerate(np.arange(non_rephaasing_tau_start, non_rephaasing_tau_end + 1, tau_step)):
-    filename = f"..2d_output/out_{tau}_{T}.out"
+    filename = f"./2d_output/out_{tau}_{T}.out"
     d = []
     with open(filename, 'r') as file:
         # Convert the file content into an array of complex numbers
@@ -47,7 +47,7 @@ rephasing_tau_end = tau_end
 
 #loading rephasing data
 for i, tau in enumerate(np.arange(rephasing_tau_start, rephasing_tau_end + 1, tau_step)):
-    filename = f"..2d_output/out_{tau}_{T}.out"
+    filename = f"./2d_output/out_{tau}_{T}.out"
     d = []
     with open(filename, 'r') as file:
         # Convert the file content into an array of complex numbers
