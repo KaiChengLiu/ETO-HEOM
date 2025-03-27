@@ -24,12 +24,12 @@ This script is designed to **run a batch of 2DES simulations** on a single node 
 - `CPU_2DES`: path to the simulation executable
 - `TLIST`: list of population times T
 - `TAU`: ranges from -600 to 600 with step size 10
-- For each combination of `TAU` and `T`, it checks if the input file exists (`key_{TAU}_{T}_wc125.key`), and runs the simulation if so.
+- For each combination of `TAU` and `T`, it checks if the input file exists (`key_{TAU}_{T}.key`), and runs the simulation if so.
 - Executes up to 11 parallel jobs at a time using `&` and `wait`.
 
 ### Output
 
-- Results are written to `../2d_output/out_{TAU}_{T}_wc125.out`
+- Results are written to `../2d_output/out_{TAU}_{T}.out`
 - Errors from missing inputs are appended to `error.log`
 - PBS logs and errors go to `Run_CPU_2DES.pbslog` and `Run_CPU_2DES.pbserr`
 
