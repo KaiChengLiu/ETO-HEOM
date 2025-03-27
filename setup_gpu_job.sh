@@ -11,7 +11,7 @@ BATHTYPE="$2"
 FOLDER_NAME="GPU_${JOBNAME}_${BATHTYPE}"
 
 # Set the base home path
-HOME_PATH="/home/andrew91411"
+HOME_PATH="$(dirname "$(dirname "$(realpath "$0")")")"
 
 # Validate BATHTYPE
 if [[ "$BATHTYPE" != "debye_lorentz" && "$BATHTYPE" != "ohmic" && "$BATHTYPE" != "superohmic" ]]; then
