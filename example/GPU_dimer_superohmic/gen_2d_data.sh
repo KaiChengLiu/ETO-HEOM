@@ -41,7 +41,7 @@ for t in "${T[@]}"; do
         tau3=$(echo "$t0 + $i + $t" | bc)
         t_end=$(echo "$t0 + $i + $t + $propagate_time" | bc)
 
-        of_name="key_${i}_${t}.key"
+        of_name="./2d-input/key_${i}_${t}.key"
         process_file "$tau1" "$tau2" "$tau3" "$t_end" "$of_name" &
     done
 done
@@ -55,10 +55,11 @@ for t in "${T[@]}"; do
         tau3=$(echo "$t0 + $abs_i + $t" | bc)
         t_end=$(echo "$t0 + $abs_i + $t + $propagate_time" | bc)
 
-        of_name="key_${i}_${t}.key"
+        of_name="./2d-input/key_${i}_${t}.key"
         process_file "$tau1" "$tau2" "$tau3" "$t_end" "$of_name" &
     done
 done
 
 # Wait for all background processes to complete
 wait
+
