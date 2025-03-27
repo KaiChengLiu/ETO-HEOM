@@ -1,25 +1,77 @@
-# GPU_ETOM-2DES
+# ETO-HEOM (GPU Version)
 
-GPU: Use GPU to conduct the caululation. In this project, we use CUDA.
+This directory contains the **GPU-accelerated implementation** of the Extended Thiele Oscillator Hierarchical Equations of Motion (**ETO-HEOM**) framework, optimized for simulating open quantum systems in the context of 2D electronic spectroscopy.
 
-ETOM: Effective Thermal Ocillator Model
+---
 
-2DES: 2 Dimensional Electronic Spectroscopy
+## Structure
 
-Simulate 2DES of multilevel excitonic system using heirachical equation of motion (HEOM) with ETOM. It is far more efficient than traditional HEOM.
+- **`lib/`**  
+  Contains the static CUDA-compiled library (`libgpu2des.a`) and object files.
 
-The code uses HEOM to calculate numerically exact quantum dynamics of multilevel quantum systems. The density matrix of a system is propagated using RK4 propagator. Moreover, the code handles multiple laser pulses and consider its pulse width which enables it to simulate electronic four-wave mixing signals such as three-pulse photon-echo peakshift measurements.
+- **`src/`**  
+  Contains the CUDA-based source files for:
+  - `GPU_2DES`: executable for 2D electronic spectroscopy simulations
+  - `GPU_dynamics`: executable for population dynamics or real-time evolution
 
-For how to setup and process the jobs, see INSTALL file.
+---
 
-Module: 
+## GPU & CUDA Requirements
 
-  GPU_2DES: Calculates 2DES for multilevel excitonic system including Monte-Carlo Gaussian static disorders.
+- This version **requires an NVIDIA GPU** and uses:
+  - **CUDA Toolkit 11.8**
+  - `nvcc` for compilation
+  - CUDA libraries for parallel matrix operations and integration kernels
 
-Usage:
+Make sure your system supports CUDA 11.8 and the necessary GPU drivers are correctly installed.
 
-  1. Follow the INSTALL file to set up the environment
-  2. Set up input file, you can follow the step in /2d_intput/README.md
-  3. Set up ETOM by /bath_model/ETOM.py
-  4. Run /script/Run_GPU_2DES.sh
-  5. Draw 2D spectrum by gen_2d_spectrum/gen_2d_spectrum.py 
+---
+
+## Compilation
+
+If a Makefile is provided, run:
+
+```bash
+make
+```
+
+Ensure the environment variables for CUDA 11.8 are set correctly:
+
+```bash
+export CUDA_HOME=/usr/local/cuda-11.8
+export PATH=$CUDA_HOME/bin:$PATH
+export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+```
+
+You may need to modify include/library paths in the Makefile depending on your system.
+
+---
+
+## Usage
+
+After compilation, run the executables with properly prepared `.key` files containing all system, bath, and simulation settings.
+
+Example usage (standalone):
+
+```bash
+./GPU_2DES key_-100_0.key > out_-100_0.out
+```
+
+For automated PBS job submission, refer to:
+
+- `../Run_GPU_2DES.sh` — full batch simulation
+- `../Run_GPU_dynamics.sh` — dynamics-only simulations
+
+---
+
+## Notes
+
+- Significantly faster than CPU implementation
+- Fully compatible with the ETOM input/output structure and high-level automation scripts
+- Designed to run on a **single GPU** per job (multi-GPU not supported in current version)
+
+📄 For the full workflow, refer to the main project README or the following step-by-step documentation:
+
+- `../etom/README.md` — for generating ETOM bath parameters
+- `../script/IO-scripts/README.md` — for editing input templates
+- `../gen-2d-data/README.md` — for post-processing and visualization
