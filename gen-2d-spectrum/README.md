@@ -82,4 +82,4 @@ A Jupyter Notebook version is available in the same directory for interactive ex
 - Step-by-step explanation of each stage
 - Visualization of intermediate results
 - Parameter customization and testing
-```
+
