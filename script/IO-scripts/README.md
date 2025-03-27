@@ -1,4 +1,4 @@
-# 2DES Input File Generator
+# IO-script
 
 This repository generates input files for 2D electronic spectroscopy (2DES) simulations using pre-defined templates and configurations.
 
