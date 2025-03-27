@@ -79,7 +79,7 @@ JOBNAME_BATHTYPE/
 ├── clean_2d_data.sh          # Script to clean .key and .out files
 ├── gen_2d_spectrum.py        # Script to analyze output
 ├── BATHTYPE_ETOM.py          # ETO model for the specified bath type
-└── submit_jobs.sh            # Script to generate & submit PBS jobs (CPU)
+├── submit_jobs.sh            # Script to generate & submit PBS jobs (CPU)
 └── README.md                 # Usage of working file
 
 ```
@@ -115,7 +115,7 @@ JOBNAME_BATHTYPE/
 ├── clean_2d_data.sh          # Script to clean .key and .out files
 ├── gen_2d_spectrum.py        # Script to analyze output
 ├── BATHTYPE_ETOM.py          # ETO model for the specified bath type
-└── submit_jobs.sh            # Script to generate & submit PBS jobs (GPU)
+├── submit_jobs.sh            # Script to generate & submit PBS jobs (GPU)
 └── README.md                 # Usage of working file
 ```
 
