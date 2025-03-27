@@ -12,13 +12,13 @@ CPU_2DES=../src/CPU_2DES
 # Change to the directory where the job was submitted
 cd $PBS_O_WORKDIR
 
-TLIST="0 50 100 150 200 250 300 350 400 450 500"
+TLIST="0"
 
 # Loop through all combinations of TAU and T
 for TAU in $(seq -600 10 600); do
     for T in $TLIST; do
-        INPUT_FILE="/home/andrew91411/CPU_2DES/2d_input/key_${TAU}_${T}_wc125.key"
-        OUTPUT_FILE="/home/andrew91411/CPU_2DES/2d_output/out_${TAU}_${T}_wc125.out"
+        INPUT_FILE="/home/andrew91411/CPU_2DES/2d_input/key_${TAU}_${T}.key"
+        OUTPUT_FILE="/home/andrew91411/CPU_2DES/2d_output/out_${TAU}_${T}.out"
 
         # Check if the input file exists
         if [ ! -f "$INPUT_FILE" ]; then
