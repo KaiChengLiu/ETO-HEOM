@@ -4,7 +4,7 @@
 HOME_PATH="/home/andrew91411"
 
 # Set the job name (auto-inserted by setup script)
-JOBNAME="CPU_dimer_superohmic"
+JOBNAME="CPU_dimer_ohmic"
 
 CPU_2DES="$HOME_PATH/ETO-HEOM/etoheom-cpu/src/CPU_2DES"
 PBS_DIR="."  # Current directory

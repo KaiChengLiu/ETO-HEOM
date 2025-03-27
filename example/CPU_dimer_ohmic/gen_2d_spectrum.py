@@ -24,7 +24,7 @@ non_rephaasing_data = np.zeros((size1, size2), dtype=np.complex128)
 
 #loading non-rephasing data
 for i, tau in enumerate(np.arange(non_rephaasing_tau_start, non_rephaasing_tau_end + 1, tau_step)):
-    filename = f"./2d_output/out_{tau}_{T}.out"
+    filename = f"./2d-output/out_{tau}_{T}.out"
     d = []
     with open(filename, 'r') as file:
         # Convert the file content into an array of complex numbers
@@ -47,7 +47,7 @@ rephasing_tau_end = tau_end
 
 #loading rephasing data
 for i, tau in enumerate(np.arange(rephasing_tau_start, rephasing_tau_end + 1, tau_step)):
-    filename = f"./2d_output/out_{tau}_{T}.out"
+    filename = f"./2d-output/out_{tau}_{T}.out"
     d = []
     with open(filename, 'r') as file:
         # Convert the file content into an array of complex numbers
@@ -65,10 +65,10 @@ fft_non_rephaasing_data = fftshift(fft2(non_rephaasing_data)).real
 fft_rephaasing_data = fftshift(fft2(rephaasing_data)).real
 fft_data = fft_rephaasing_data + fft_non_rephaasing_data
 
-'''
+
 # Apply the Gaussian filter
 fft_data = gaussian_filter(fft_data, sigma=(8, 0.8))  # Adjust sigma as needed
-'''
+
 
 '''
 #arcsinh signal amplifier, use as need
@@ -135,7 +135,7 @@ plt.xlabel("$\omega_{\\tau} \ cm^{-1}$")
 plt.ylabel("$\omega_t \ cm^{-1}$")
 plt.xlim(0, 900)
 plt.ylim(0, 900)
-plt.title(f'pulse width = 100 fs')
+#plt.title(f'pulse width = 100 fs')
 plt.savefig('my_spectrum.png')
 #show the figure as need
 #plt.show()

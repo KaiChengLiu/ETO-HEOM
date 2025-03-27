@@ -4,7 +4,7 @@
 HOME_PATH="/home/andrew91411"
 
 # Job name (auto set by setup script)
-JOBNAME="GPU_dimer_superohmic"
+JOBNAME="GPU_dimer_ohmic"
 
 # GPU executable
 GPU_2DES="$HOME_PATH/ETO-HEOM/etoheom-gpu/src/GPU_2DES"

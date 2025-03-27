@@ -5,12 +5,14 @@ from scipy.optimize import curve_fit
 
 # Define constants
 hbar = 5308                  # (cm^-1 * fs)
-w_c = 100 / hbar             # cutoff frequency (fs^-1)
+w_c = 150 / hbar             # cutoff frequency (fs^-1)
 coupling_str = 1.0           # coupling strength (dimensionless)
-kt = 0.5 * w_c               # thermal energy (fs^-1)
+kt = 77 * 0.695 / hbar       # thermal energy (fs^-1)
 beta = 1 / kt                # inverse temperature (fs)
 N = 3                        # number of effective oscillators
-init_guess = 0.01
+init_guess = 0.1
+l = coupling_str * w_c / np.pi
+bounds = (-np.inf, np.inf)
 
 
 # Define spectral density
@@ -18,9 +20,9 @@ init_guess = 0.01
 def J(w):
     """
     Defines the spectral density function J(ω) for the bath (environment).
-    In this example, we use a Super-Ohmic form:
+    In this example, we use a Ohmic form:
     
-    J(ω) = coupling_str * (ω^3 / w_c^2) * exp(-ω / w_c)
+    J(ω) = coupling_str * ω * exp(-ω / w_c)
     
     You can replace this function with any other spectral density function that you want to use.
     
@@ -34,7 +36,7 @@ def J(w):
     float
         Value of the spectral density function at frequency w.
     """
-    return coupling_str * w**3 / w_c**2 * np.exp(-w / w_c)
+    return coupling_str * w * np.exp(-w / w_c)
 
 def integrand_real(w, t):
     """
@@ -97,7 +99,7 @@ def original_function_real(t):
         integrand_real, 0, np.inf, args=(t,),
         epsabs=1e-10, epsrel=1e-10, limit=10_000_000
     )
-    return integral * np.pi
+    return integral / np.pi
 
 def original_function_imag(t):
     """
@@ -120,7 +122,7 @@ def original_function_imag(t):
         integrand_imag, 0, np.inf, args=(t,),
         epsabs=1e-10, epsrel=1e-10, limit=10_000_000
     )
-    return integral * np.pi
+    return integral / np.pi
 
 # Define fit function using multiple bases
 def fit_function_real(t, *params):
@@ -158,7 +160,7 @@ def fit_function_imag(t, *params):
     return result
 
 # Generate sample data
-t_values = np.linspace(0, 500, 1000)
+t_values = np.linspace(0, 1000, 1000)
 y_values_real = np.array([original_function_real(t) for t in t_values])
 y_values_imag = np.array([original_function_imag(t) for t in t_values])
 
@@ -166,7 +168,7 @@ y_values_imag = np.array([original_function_imag(t) for t in t_values])
 initial_guess_real = [init_guess, init_guess, init_guess] * N  # (a_0, g_0, w_0, ..., a_(N-1), g_(N-1), w_(N-1))
 popt_real, pcov_real = curve_fit(
     fit_function_real, t_values, y_values_real,
-    p0=initial_guess_real, maxfev=1_000_000_000
+    p0=initial_guess_real, maxfev=1_000_000_000, bounds=bounds
 )
 
 # Extract (g_i, w_i) from the real-part fit
@@ -177,8 +179,7 @@ w_values = popt_real[2::3]  # every 3rd element, starting from index 2
 initial_guess_imag = [init_guess] * N
 popt_imag, pcov_imag = curve_fit(
     fit_function_imag, t_values, y_values_imag,
-    p0=initial_guess_imag, maxfev=1_000_000_000,
-    bounds=(-np.inf, np.inf)
+    p0=initial_guess_imag, maxfev=1_000_000_000, bounds=bounds
 )
 
 # Print the ETOM parameters
@@ -193,7 +194,7 @@ for j in range(N):
     print(f"{a / 2:.8f} {b / 2:.8f} {g:.8f} {-w:.8f}")
 
 # Plot the analytic & fit TCF (open as need)
-'''
+
 fontsize = 30
 labelpad = 12
 labelsize = 16
@@ -243,8 +244,8 @@ plt.ylabel(r"$\mathrm{Im}\{C(t)\} \,/\, \eta$", fontsize=fontsize, labelpad=labe
 plt.legend(fontsize=fontsize - 5)
 plt.tick_params(axis='both', which='major', labelsize=labelsize)
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
-#plt.show()
-'''
+plt.show()
+
 
 import os
 
@@ -258,7 +259,7 @@ import os
 new_data_lines = []
 
 # First line: reorganization energy
-new_data_lines.append(f"{6 * coupling_str * w_c / np.pi}\n")
+new_data_lines.append(f"{l}\n")
 
 # Second line: number of ETOM modes
 new_data_lines.append(f"{2 * N}\n")

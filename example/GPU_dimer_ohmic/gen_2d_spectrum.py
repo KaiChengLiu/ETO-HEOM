@@ -65,10 +65,10 @@ fft_non_rephaasing_data = fftshift(fft2(non_rephaasing_data)).real
 fft_rephaasing_data = fftshift(fft2(rephaasing_data)).real
 fft_data = fft_rephaasing_data + fft_non_rephaasing_data
 
-'''
+
 # Apply the Gaussian filter
 fft_data = gaussian_filter(fft_data, sigma=(8, 0.8))  # Adjust sigma as needed
-'''
+
 
 '''
 #arcsinh signal amplifier, use as need
@@ -135,7 +135,7 @@ plt.xlabel("$\omega_{\\tau} \ cm^{-1}$")
 plt.ylabel("$\omega_t \ cm^{-1}$")
 plt.xlim(0, 900)
 plt.ylim(0, 900)
-plt.title(f'pulse width = 100 fs')
+#plt.title(f'pulse width = 100 fs')
 plt.savefig('my_spectrum.png')
 #show the figure as need
 #plt.show()
