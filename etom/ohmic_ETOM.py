@@ -36,7 +36,7 @@ def J(w):
     float
         Value of the spectral density function at frequency w.
     """
-    return coupling_str * w * np.exp(-w / w_c)
+    return w * np.exp(-w / w_c)
 
 def integrand_real(w, t):
     """
@@ -190,8 +190,8 @@ for j in range(N):
     w = popt_real[3 * j + 2]
     
     # Print pairs for positive and negative frequencies
-    print(f"{a / 2:.8f} {b / 2:.8f} {g:.8f} {w:.8f}")
-    print(f"{a / 2:.8f} {b / 2:.8f} {g:.8f} {-w:.8f}")
+    print(f"{coupling_str * a / 2:.8f} {coupling_str * b / 2:.8f} {g:.8f} {w:.8f}")
+    print(f"{coupling_str * a / 2:.8f} {coupling_str * b / 2:.8f} {g:.8f} {-w:.8f}")
 
 # Plot the analytic & fit TCF (open as need)
 
@@ -273,8 +273,8 @@ for j in range(N):
     g = popt_real[3 * j + 1]
     w = popt_real[3 * j + 2]
 
-    new_data_lines.append(f"{a / 2:.8f} {b / 2:.8f} {g:.8f} {w:.8f}\n")
-    new_data_lines.append(f"{a / 2:.8f} {b / 2:.8f} {g:.8f} {-w:.8f}\n")
+    new_data_lines.append(f"{coupling_str * a / 2:.8f} {coupling_str * b / 2:.8f} {g:.8f} {w:.8f}\n")
+    new_data_lines.append(f"{coupling_str * a / 2:.8f} {b / 2:.8f} {coupling_str * g:.8f} {-w:.8f}\n")
 
 # Read the existing file
 key_file_path = "./key.key-tmpl"
