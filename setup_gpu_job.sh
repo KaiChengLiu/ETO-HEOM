@@ -10,8 +10,8 @@ JOBNAME="$1"
 BATHTYPE="$2"
 FOLDER_NAME="GPU_${JOBNAME}_${BATHTYPE}"
 
-# Set the base home path
-HOME_PATH="$(dirname "$(dirname "$(realpath "$0")")")"
+# Set the base home path, it should be the location of ETO-HEOM program 
+HOME_PATH="/home/andrew91411"
 
 # Validate BATHTYPE
 if [[ "$BATHTYPE" != "debye_lorentz" && "$BATHTYPE" != "ohmic" && "$BATHTYPE" != "superohmic" ]]; then
@@ -40,6 +40,7 @@ cp "$HOME_PATH/ETO-HEOM/script/gpu-script/submit_jobs.sh" "$FOLDER_NAME/"
 cp "$HOME_PATH/ETO-HEOM/usage/README.md" "$FOLDER_NAME/"
 cp "$HOME_PATH/ETO-HEOM/etom/${BATHTYPE}_ETOM.py" "$FOLDER_NAME/"
 
-# Modify submit_jobs.sh to hardcode the full folder name as JOBNAME
+# Modify submit_jobs.sh to hardcode HOME_PATH and JOBNAME
+sed -i "s|^HOME_PATH=.*|HOME_PATH=\"$HOME_PATH\"|" "$FOLDER_NAME/submit_jobs.sh"
 sed -i "0,/JOBNAME=.*$/s/JOBNAME=.*$/JOBNAME=\"$FOLDER_NAME\"/" "$FOLDER_NAME/submit_jobs.sh"
 
