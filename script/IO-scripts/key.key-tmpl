@@ -1,0 +1,50 @@
+SIZE
+3
+
+# K K_m L Cutoff_Level
+HEOM
+2 2
+
+# cm^-1
+HAMILTONIAN
+0   0   0
+0   400 100
+0   100 500
+
+#n_sample, random seed
+DISORDER
+50 114
+0.0 0.0 0.0
+0.0 42.4 0.0
+0.0 0.0 42.4 
+
+BATHTYPE
+artificial
+
+# |m><n| lambda(cm^-1) gamma(cm^-1)
+BATH
+
+
+# number of dipole assignment
+# n->m X Y Z
+DIPOLE
+2
+0 1 1.0 0.0 0.0
+0 2 0.0 1.0 0.0
+
+
+# The angles account for the four pulses polarization
+# The value should be 0 or 90 degree
+POLARIZATION
+0 0 0 0
+
+# number of pulses
+# E0(cm^-1) tau0(fs) taup(fs) w0(cm^-1)
+PULSE
+3
+5 TAU1 20 500
+5 TAU2 20 500
+5 TAU3 20 500
+# start (fs) end(fs) step_size(fs) print_step(fs)
+TIME 
+0 T_END 2 10

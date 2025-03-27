@@ -32,7 +32,7 @@ mkdir -p "$FOLDER_NAME/pbs-script/pbserr"
 mkdir -p "$FOLDER_NAME/pbs-script/pbslog"
 
 # Copy files into the folder
-cp "$HOME_PATH/ETO-HEOM/etoheom-cpu/2d_input/key.key-tmpl" "$FOLDER_NAME/"
+cp "$HOME_PATH/ETO-HEOM/script/IO-scripts/key.key-tmpl" "$FOLDER_NAME/"
 cp "$HOME_PATH/ETO-HEOM/gen-2d-spectrum/gen_2d_spectrum.py" "$FOLDER_NAME/"
 cp "$HOME_PATH/ETO-HEOM/script/IO-scripts/gen_2d_data.sh" "$FOLDER_NAME/"
 cp "$HOME_PATH/ETO-HEOM/script/IO-scripts/clean_2d_data.sh" "$FOLDER_NAME/"
