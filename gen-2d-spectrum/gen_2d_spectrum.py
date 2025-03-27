@@ -135,7 +135,7 @@ plt.xlabel("$\omega_{\\tau} \ cm^{-1}$")
 plt.ylabel("$\omega_t \ cm^{-1}$")
 plt.xlim(0, 900)
 plt.ylim(0, 900)
-plt.title(f'pulse width = 100 fs')
+#plt.title(f'pulse width = 100 fs')
 plt.savefig('my_spectrum.png')
 #show the figure as need
 #plt.show()
