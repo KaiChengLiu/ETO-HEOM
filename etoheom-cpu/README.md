@@ -1,25 +1,52 @@
-# GPU_ETOM-2DES
+# ETO-HEOM (CPU Version)
 
-CPU: Use CPU to conduct the caululation. In this project, we use GSL.
+This directory contains the **CPU implementation** of the Extended Thiele Oscillator Hierarchical Equations of Motion (**ETO-HEOM**) framework for simulating open quantum systems, especially applied to 2D electronic spectroscopy.
 
-ETOM: Effective Thermal Ocillator Model
+---
 
-2DES: 2 Dimensional Electronic Spectroscopy
+## Structure
 
-Simulate 2DES of multilevel excitonic system using heirachical equation of motion (HEOM) with ETOM. It is far more efficient than traditional HEOM.
+- **`lib/`**  
+  Contains the static library (`libcpu2des.a`) and compiled objects for CPU-based HEOM propagation.
 
-The code uses HEOM to calculate numerically exact quantum dynamics of multilevel quantum systems. The density matrix of a system is propagated using RK4 propagator. Moreover, the code handles multiple laser pulses and consider its pulse width which enables it to simulate electronic four-wave mixing signals such as three-pulse photon-echo peakshift measurements.
+- **`src/`**  
+  Contains the main executable sources for:
+  - `CPU_2DES`: for 2D electronic spectroscopy simulations
+  - `CPU_dynamics` or similar: for population dynamics or other time-evolution tasks
 
-For how to setup and process the jobs, see INSTALL file.
+---
 
-Module: 
+## Dependencies
 
-  CPU_2DES: Calculates 2DES for multilevel excitonic system including Monte-Carlo Gaussian static disorders.
+- This CPU version of ETO-HEOM uses the **GNU Scientific Library (GSL)** version **2.8** for numerical integration and matrix operations.
+- Make sure GSL 2.8 is correctly installed and accessible on your system before compiling or running the code.
 
-Usage:
+---
 
-  1. Follow the INSTALL file to set up the environment
-  2. Set up input file, you can follow the step in /2d_intput/README.md
-  3. Set up ETOM by /bath_model/ETOM.py
-  4. Run /script/Run_CPU_2DES.sh
-  5. Draw 2D spectrum by gen_2d_spectrum/gen_2d_spectrum.py 
+## Compilation
+
+Compilation is handled via Makefile (if provided), and typically builds the library and main executables. You may need to adjust include/library paths for your system’s GSL installation.
+
+Example (if Makefile is present):
+
+```bash
+make
+```
+
+---
+
+## Usage
+
+Once compiled, the main executables (e.g., `CPU_2DES`) can be called with a `.key` input file that contains system Hamiltonian, bath parameters, dipole information, and time settings.
+
+Refer to higher-level scripts and documentation in:
+
+- `../script/IO-scripts/README.md` — input structure
+- `../Run_CPU_2DES.sh` — PBS job submission
+
+---
+
+## Notes
+
+- This implementation is single-GPU/multi-core CPU optimized but **does not require GPU hardware**.
+- Useful for benchmarking, debugging, or running HEOM simulations on CPU-based HPC clusters.
