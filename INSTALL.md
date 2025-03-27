@@ -12,12 +12,14 @@ The code is developed for Linux systems with support for both CPU and NVIDIA GPU
 
 | Component      | Version    |
 |----------------|------------|
+| C++ Standard   | C++14      |
 | GSL            | 2.8        |
 | CUDA           | 11.8       |
 | Python         | 3.11.4     |
 | NumPy          | 1.24.3     |
 | SciPy          | 1.11.1     |
 | Matplotlib     | 3.7.1      |
+
 
 > GSL is required to CPU HEOM solvers calculation.
 > CUDA is required to GPU HEOM solvers calculation.
