@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Set HOME path
-HOME_PATH="/home/andrew91411"
+HOME_PATH="YOUR_HOME_PATH"
 
 # Job name (auto set by setup script)
-JOBNAME="MyJob_bathtype"
+JOBNAME="YOUR_JOBNAME"
 
 # GPU executable
 GPU_2DES="$HOME_PATH/ETO-HEOM/etoheom-gpu/src/GPU_2DES"
