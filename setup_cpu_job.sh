@@ -39,6 +39,7 @@ cp "$HOME_PATH/ETO-HEOM/script/IO-scripts/clean_2d_data.sh" "$FOLDER_NAME/"
 cp "$HOME_PATH/ETO-HEOM/script/cpu-script/submit_jobs.sh" "$FOLDER_NAME/"
 cp "$HOME_PATH/ETO-HEOM/usage/README.md" "$FOLDER_NAME/"
 cp "$HOME_PATH/ETO-HEOM/etom/${BATHTYPE}_ETOM.py" "$FOLDER_NAME/"
+cp "$HOME_PATH/ETO-HEOM/etom/${BATHTYPE}_ETOM_example.ipynb" "$FOLDER_NAME/"
 
 # Modify submit_jobs.sh to hardcode HOME_PATH and JOBNAME
 sed -i "s|^HOME_PATH=.*|HOME_PATH=\"$HOME_PATH\"|" "$FOLDER_NAME/submit_jobs.sh"
