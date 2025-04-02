@@ -1,0 +1,19 @@
+# Object files
+*.o
+
+# Executables
+etoheom-cpu/src/CPU_2DES
+etoheom-cpu/src/CPU_dynamics
+etoheom-gpu/src/GPU_2DES
+etoheom-gpu/src/GPU_dynamics
+
+# Static libraries
+*.a
+
+# Compiled folders
+etoheom-cpu/lib/
+etoheom-gpu/lib/
+
+# Plots or generated output
+*.png
+example/**/my_spectrum.png
