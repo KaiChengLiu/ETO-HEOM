@@ -4,124 +4,36 @@ from scipy.integrate import quad
 from scipy.optimize import curve_fit
 
 # Define constants
-hbar = 5308                  # (cm^-1 * fs)
-w_c = 150 / hbar             # cutoff frequency (fs^-1)
-coupling_str = 1.0           # coupling strength (dimensionless)
-kt = 77 * 0.695 / hbar       # thermal energy (fs^-1)
-beta = 1 / kt                # inverse temperature (fs)
-N = 3                        # number of effective oscillators
-init_guess = 0.1
-l = coupling_str * w_c / np.pi
-bounds = (-np.inf, np.inf)
+hbar = 5308              # Planck constant (cm^-1 * fs)
+w_c = 150 / hbar         # Cutoff frequency (fs^-1)
+coupling_str = 1.0       # Coupling strength (dimensionless)
+kt = 77 * 0.695          # Thermal energy (fs^-1)
+beta = 1 / kt            # Inverse temperature (fs)
+N = 3                    # Number of effective oscillators
+init_guess = 0.1         # Initial guess for fit parameters
+save_fig = False         
 
 
 # Define spectral density
 # You can change different J(w) to meet your work
 def J(w):
     """
-    Defines the spectral density function J(ω) for the bath (environment).
-    In this example, we use a Ohmic form:
-    
-    J(ω) = coupling_str * ω * exp(-ω / w_c)
-    
-    You can replace this function with any other spectral density function that you want to use.
-    
-    Parameters
-    ----------
-    w : float
-        Mode frequency (fs^-1).
-    
-    Returns
-    ----------
-    float
-        Value of the spectral density function at frequency w.
+    Defines the spectral density J(w) = w * exp(-w / w_c).
     """
     return w * np.exp(-w / w_c)
 
 def integrand_real(w, t):
-    """
-    Real part of the integrand for calculating the TCF.
-    
-    integrand_real(w, t) = J(w) * cos(w * t) / tanh(0.5 * beta * w)
-    
-    Parameters
-    ----------
-    w : float
-        Mode frequency (fs^-1).
-    t : float
-        Time variable.
-    
-    Returns
-    ----------
-    float
-        The real part of the integrand at frequency w and time t.
-    """
-    return J(w) * np.cos(w * t) / np.tanh(0.5 * beta * w)
+    return J(w) * np.cos(w * t) / np.tanh(0.5 * beta * w * hbar)
 
 def integrand_imag(w, t):
-    """
-    Imaginary part of the integrand for calculating the TCF.
-    
-    integrand_imag(w, t) = -J(w) * sin(w * t)
-
-    Parameters
-    ----------
-    w : float
-        Mode frequency (fs^-1).
-    t : float
-        Time variable.
-    
-    Returns
-    ----------
-    float
-        The imaginary part of the integrand at frequency w and time t.
-    """
     return -J(w) * np.sin(w * t)
 
 def original_function_real(t):
-    """
-    Computes the real part of the TCF by numerically 
-    integrating the 'integrand_real' function from 0 to infinity using the 
-    scipy.integrate.quad routine.
-
-    Parameters
-    ----------
-    t : float
-        The time variable at which the TCF is to be evaluated.
-    
-    Returns
-    ----------
-    float
-        The real part of the TCF at time t, computed as ∫(integrand_real) dw 
-        from 0 to ∞, multiplied by π.
-    """
-    integral, _ = quad(
-        integrand_real, 0, np.inf, args=(t,),
-        epsabs=1e-10, epsrel=1e-10, limit=10_000_000
-    )
+    integral, _ = quad(integrand_real, 0, np.inf, args=(t,), epsabs=1e-10, epsrel=1e-10, limit=10_000_000)
     return integral / np.pi
 
 def original_function_imag(t):
-    """
-    Computes the imaginary part of the TCF by numerically 
-    integrating the 'integrand_imag' function from 0 to infinity using the 
-    scipy.integrate.quad routine.
-
-    Parameters
-    ----------
-    t : float
-        The time variable at which the TCF is to be evaluated.
-
-    Returns
-    ----------
-    float
-        The imaginary part of the TCF at time t, computed as ∫(integrand_imag) dw 
-        from 0 to ∞, multiplied by π.
-    """
-    integral, _ = quad(
-        integrand_imag, 0, np.inf, args=(t,),
-        epsabs=1e-10, epsrel=1e-10, limit=10_000_000
-    )
+    integral, _ = quad(integrand_imag, 0, np.inf, args=(t,), epsabs=1e-10, epsrel=1e-10, limit=10_000_000)
     return integral / np.pi
 
 # Define fit function using multiple bases
@@ -168,7 +80,7 @@ y_values_imag = np.array([original_function_imag(t) for t in t_values])
 initial_guess_real = [init_guess, init_guess, init_guess] * N  # (a_0, g_0, w_0, ..., a_(N-1), g_(N-1), w_(N-1))
 popt_real, pcov_real = curve_fit(
     fit_function_real, t_values, y_values_real,
-    p0=initial_guess_real, maxfev=1_000_000_000, bounds=bounds
+    p0=initial_guess_real, maxfev=1_000_000_000
 )
 
 # Extract (g_i, w_i) from the real-part fit
@@ -179,7 +91,7 @@ w_values = popt_real[2::3]  # every 3rd element, starting from index 2
 initial_guess_imag = [init_guess] * N
 popt_imag, pcov_imag = curve_fit(
     fit_function_imag, t_values, y_values_imag,
-    p0=initial_guess_imag, maxfev=1_000_000_000, bounds=bounds
+    p0=initial_guess_imag, maxfev=1_000_000_000
 )
 
 # Print the ETOM parameters
@@ -206,14 +118,14 @@ def format_func(value, tick_number):
 plt.figure(figsize=(10, 8))
 plt.scatter(
     t_values[::20] * w_c,
-    y_values_real[::20],
+    y_values_real[::20] * coupling_str,
     label=fr'Analytic $(k_bT = {kt / w_c}\omega_c)$',
     s=10,
     color='black'
 )
 plt.plot(
     t_values * w_c,
-    fit_function_real(t_values, *popt_real),
+    coupling_str * fit_function_real(t_values, *popt_real),
     label=fr'ETOM $(k_bT = {kt / w_c}\omega_c)$',
     color='blue'
 )
@@ -222,20 +134,21 @@ plt.ylabel(r"$\mathrm{Re}\{C(t)\} \,/\, \eta$", fontsize=fontsize, labelpad=labe
 plt.legend(fontsize=fontsize - 5)
 plt.tick_params(axis='both', which='major', labelsize=labelsize)
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+if save_fig: plt.savefig('ohmic_TCF_real.png')
 plt.show()
 
 # Plot the Imaginary Part
 plt.figure(figsize=(10, 8))
 plt.scatter(
     t_values[::20] * w_c,
-    y_values_imag[::20],
+    y_values_imag[::20]* coupling_str,
     label=fr'Analytic $(k_bT = {kt / w_c}\omega_c)$',
     s=10,
     color='black'
 )
 plt.plot(
     t_values * w_c,
-    fit_function_imag(t_values, *popt_imag),
+    coupling_str * fit_function_imag(t_values, *popt_imag),
     label=fr'ETOM $(k_bT = {kt / w_c}\omega_c)$',
     color='blue'
 )
@@ -244,6 +157,7 @@ plt.ylabel(r"$\mathrm{Im}\{C(t)\} \,/\, \eta$", fontsize=fontsize, labelpad=labe
 plt.legend(fontsize=fontsize - 5)
 plt.tick_params(axis='both', which='major', labelsize=labelsize)
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+if save_fig: plt.savefig('ohmic_TCF_imag.png')
 plt.show()
 
 
@@ -259,7 +173,7 @@ import os
 new_data_lines = []
 
 # First line: reorganization energy
-new_data_lines.append(f"{l}\n")
+new_data_lines.append(f"{coupling_str * w_c / np.pi}\n")
 
 # Second line: number of ETOM modes
 new_data_lines.append(f"{2 * N}\n")
@@ -274,11 +188,11 @@ for j in range(N):
     w = popt_real[3 * j + 2]
 
     new_data_lines.append(f"{coupling_str * a / 2:.8f} {coupling_str * b / 2:.8f} {g:.8f} {w:.8f}\n")
-    new_data_lines.append(f"{coupling_str * a / 2:.8f} {b / 2:.8f} {coupling_str * g:.8f} {-w:.8f}\n")
+    new_data_lines.append(f"{coupling_str * a / 2:.8f} {coupling_str * b / 2:.8f} {g:.8f} {-w:.8f}\n")
 
 # Read the existing file
 key_file_path = "./key.key-tmpl"
-with open(key_file_path, "r", encoding="utf-8") as f:
+with open(key_file_path, "r") as f:
     lines = f.readlines()
 
 # Locate the lines containing BATH and DIPOLE
