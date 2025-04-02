@@ -12,27 +12,12 @@ beta = 1 / kt                # inverse temperature (fs)
 N = 2                        # number of effective oscillators
 n_matsubara_term = 100
 init_guess = 0.001
+save_fig = False
 
 def original_function_real(t):
     """
-    Computes the real part of the TCF for the specified bath parameters (e.g., gamma, l, beta, hbar, etc.).
-    
-    Example of the calculation:
-    1. Initial term: gamma * l / tan(beta * hbar * gamma / 2) * exp(-gamma * t)
-    2. Summation over Matsubara frequencies:
-       g = 2 * pi * (i+1) / (beta * hbar)
-       c = 4 * l * gamma / (beta * hbar) * g / (g^2 - gamma^2)
-       res += c * exp(-g * t)
-
-    Parameters
-    ----------
-    t : float
-        Time variable.
-    
-    Returns
-    ----------
-    float
-        The real part of the TCF evaluated at time t.
+    Computes the real part of the TCF.
+    Includes a decay term + Matsubara summation.
     """
     res = gamma * l / np.tan(beta * hbar * gamma / 2) * np.exp(-gamma * t)
     for i in range(n_matsubara_term):
@@ -43,22 +28,11 @@ def original_function_real(t):
 
 def original_function_imag(t):
     """
-    Imaginary part of the Time Correlation Function (TCF).
-    In this example, it is computed as:
-    
-    gamma * l * exp(-gamma * t)
-    
-    Parameters
-    ----------
-    t : float
-        Time variable.
-
-    Returns
-    ----------
-    float
-        The imaginary part of the TCF evaluated at time t.
+    Computes the imaginary part of the TCF.
+    Uses the primary decay term.
     """
     return gamma * l * np.exp(-gamma * t)
+
 
 def fit_function_real(t, *params):
     """
@@ -128,7 +102,6 @@ for j in range(N):
     print(f"{a / 2:.8f} {b / 2:.8f} {g:.8f} {-w:.8f}")
     
 # 9. Plot settings
-'''
 fontsize = 30
 labelpad = 12
 labelsize = 16
@@ -152,6 +125,7 @@ plt.ylabel(r"$\mathrm{Re}\{C(t)\}\,/\,\lambda$", fontsize=fontsize, labelpad=lab
 plt.legend(fontsize=fontsize - 5)
 plt.tick_params(axis='both', which='major', labelsize=labelsize)
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+if save_fig: plt.savefig('debye_lorentz_TCF_real.png')
 plt.show()
 
 # Plot the Imaginary Part
@@ -173,8 +147,9 @@ plt.ylabel(r"$\mathrm{Im}\{C(t)\}\,/\,\lambda$", fontsize=fontsize, labelpad=lab
 plt.legend(fontsize=fontsize - 5)
 plt.tick_params(axis='both', which='major', labelsize=labelsize)
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+if save_fig: plt.savefig('debye_lorentz_TCF_imag.png')
 plt.show()
-'''
+
 
 import os
 
@@ -207,7 +182,7 @@ for j in range(N):
 
 # 2) Read the existing file
 key_file_path = "./key.key-tmpl"
-with open(key_file_path, "r", encoding="utf-8") as f:
+with open(key_file_path, "r") as f:
     lines = f.readlines()
 
 # 3) Locate the lines containing BATH and DIPOLE
