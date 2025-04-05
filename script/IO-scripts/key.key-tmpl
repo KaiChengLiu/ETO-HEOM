@@ -1,7 +1,7 @@
 SIZE
 3
 
-# K K_m L Cutoff_Level
+# K L
 HEOM
 2 2
 
@@ -18,12 +18,9 @@ DISORDER
 0.0 42.4 0.0
 0.0 0.0 42.4 
 
-# |m><n| lambda(cm^-1) gamma(cm^-1)
 BATH
 
 
-# number of dipole assignment
-# n->m X Y Z
 DIPOLE
 2
 0 1 1.0 0.0 0.0
