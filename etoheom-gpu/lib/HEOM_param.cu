@@ -165,55 +165,49 @@ void param::param_2des(string filename) {
 			this->beta = cuCdivf(ONE, cuCmulf({ temperature, 0.0 }, boltz_k));
 		}
 
-		else if (key_word == "BATHTYPE") {
-			//cout << "Reading BATHTYPE data" << '\n';
-			getline(f, line);
-			istringstream bathtype_stream(line);
-			bathtype_stream >> this->bath_type;
-		}
 
 		else if (key_word == "BATH") {
 			//cout << "Reading BATH data" << '\n';
-			if (this->bath_type == "artificial") {
-				getline(f, line);
-				istringstream bath_stream(line);
-				float l;
-				bath_stream >> l;
-				for (int i = 0; i < this->K; i++) this->lambda.push_back(make_cuComplex(l, 0.0));
-				int total_size = this->sys_size * this->sys_size;
-				vector<data_type> S(total_size * this->K, { 0.0, 0.0 });
-				for (int i = 0; i < this->K; i++) {
-					S[i * total_size + (i + 1) + this->sys_size * (i + 1)] = { 1.0, 0.0 };
-					this->Hal[(i + 1) + this->sys_size * (i + 1)].x += l;
-				}
-
-
-				this->d_S = To_Device(S);
-				this->d_Hal = To_Device(this->Hal);
-				int n_modes;
-				getline(f, line);
-				istringstream n_modes_stream(line);
-				n_modes_stream >> n_modes;
-
-				vector<data_type> alpha;
-				vector<data_type> alpha_t;
-				vector<data_type> gamma;
-				for (int i = 0; i < n_modes; i++) {
-					double a, b, g, w;
-					getline(f, line);
-					istringstream modes_stream(line);
-					modes_stream >> a >> b >> g >> w;
-					alpha.push_back(make_cuComplex(a, b));
-					alpha_t.push_back(make_cuComplex(a, -b));
-					gamma.push_back(make_cuComplex(g, w));
-				}
-				for (int i = 0; i < this->K; i++) {
-					this->alpha.push_back(alpha);
-					this->alpha_t.push_back(alpha_t);
-					this->gamma.push_back(gamma);
-				}
-				this->K_m = this->gamma[0].size();
+		
+			getline(f, line);
+			istringstream bath_stream(line);
+			float l;
+			bath_stream >> l;
+			for (int i = 0; i < this->K; i++) this->lambda.push_back(make_cuComplex(l, 0.0));
+			int total_size = this->sys_size * this->sys_size;
+			vector<data_type> S(total_size * this->K, { 0.0, 0.0 });
+			for (int i = 0; i < this->K; i++) {
+				S[i * total_size + (i + 1) + this->sys_size * (i + 1)] = { 1.0, 0.0 };
+				this->Hal[(i + 1) + this->sys_size * (i + 1)].x += l;
 			}
+
+
+			this->d_S = To_Device(S);
+			this->d_Hal = To_Device(this->Hal);
+			int n_modes;
+			getline(f, line);
+			istringstream n_modes_stream(line);
+			n_modes_stream >> n_modes;
+
+			vector<data_type> alpha;
+			vector<data_type> alpha_t;
+			vector<data_type> gamma;
+			for (int i = 0; i < n_modes; i++) {
+				double a, b, g, w;
+				getline(f, line);
+				istringstream modes_stream(line);
+				modes_stream >> a >> b >> g >> w;
+				alpha.push_back(make_cuComplex(a, b));
+				alpha_t.push_back(make_cuComplex(a, -b));
+				gamma.push_back(make_cuComplex(g, w));
+			}
+			for (int i = 0; i < this->K; i++) {
+				this->alpha.push_back(alpha);
+				this->alpha_t.push_back(alpha_t);
+				this->gamma.push_back(gamma);
+			}
+			this->K_m = this->gamma[0].size();
+			
 		}
 
 		else if (key_word == "PULSE") {
@@ -299,54 +293,47 @@ void param::param_dynamics(string filename) {
 				this->beta = cuCdivf(ONE, cuCmulf({ temperature, 0.0 }, boltz_k));
 			}
 
-			else if (key_word == "BATHTYPE") {
-				getline(f, line);
-				istringstream bathtype_stream(line);
-				bathtype_stream >> this->bath_type;
-			}
 
 			else if (key_word == "BATH") {
 				//cout << "Reading BATH data" << '\n';
-				if (this->bath_type == "artificial") {
-					getline(f, line);
-					istringstream bath_stream(line);
-					float l;
-					bath_stream >> l;
-					for (int i = 0; i < this->K; i++) this->lambda.push_back(make_cuComplex(l, 0.0));
-					int total_size = this->sys_size * this->sys_size;
-					vector<data_type> S(total_size * this->K, { 0.0, 0.0 });
-					for (int i = 0; i < this->K; i++) {
-						S[i * total_size + i + this->sys_size * i] = { 1.0, 0.0 };
-						this->Hal[i + this->sys_size * i].x += l;
-					}
-
-
-					this->d_S = To_Device(S);
-					this->d_Hal = To_Device(this->Hal);
-					int n_modes;
-					getline(f, line);
-					istringstream n_modes_stream(line);
-					n_modes_stream >> n_modes;
-
-					vector<data_type> alpha;
-					vector<data_type> alpha_t;
-					vector<data_type> gamma;
-					for (int i = 0; i < n_modes; i++) {
-						double a, b, g, w;
-						getline(f, line);
-						istringstream modes_stream(line);
-						modes_stream >> a >> b >> g >> w;
-						alpha.push_back(make_cuComplex(a, b));
-						alpha_t.push_back(make_cuComplex(a, -b));
-						gamma.push_back(make_cuComplex(g, w));
-					}
-					for (int i = 0; i < this->K; i++) {
-						this->alpha.push_back(alpha);
-						this->alpha_t.push_back(alpha_t);
-						this->gamma.push_back(gamma);
-					}
-					this->K_m = this->gamma[0].size();
+				getline(f, line);
+				istringstream bath_stream(line);
+				float l;
+				bath_stream >> l;
+				for (int i = 0; i < this->K; i++) this->lambda.push_back(make_cuComplex(l, 0.0));
+				int total_size = this->sys_size * this->sys_size;
+				vector<data_type> S(total_size * this->K, { 0.0, 0.0 });
+				for (int i = 0; i < this->K; i++) {
+					S[i * total_size + i + this->sys_size * i] = { 1.0, 0.0 };
+					this->Hal[i + this->sys_size * i].x += l;
 				}
+
+
+				this->d_S = To_Device(S);
+				this->d_Hal = To_Device(this->Hal);
+				int n_modes;
+				getline(f, line);
+				istringstream n_modes_stream(line);
+				n_modes_stream >> n_modes;
+
+				vector<data_type> alpha;
+				vector<data_type> alpha_t;
+				vector<data_type> gamma;
+				for (int i = 0; i < n_modes; i++) {
+					double a, b, g, w;
+					getline(f, line);
+					istringstream modes_stream(line);
+					modes_stream >> a >> b >> g >> w;
+					alpha.push_back(make_cuComplex(a, b));
+					alpha_t.push_back(make_cuComplex(a, -b));
+					gamma.push_back(make_cuComplex(g, w));
+				}
+				for (int i = 0; i < this->K; i++) {
+					this->alpha.push_back(alpha);
+					this->alpha_t.push_back(alpha_t);
+					this->gamma.push_back(gamma);
+				}
+				this->K_m = this->gamma[0].size();
 			}
 
 			else if (key_word == "TIME") {

@@ -18,9 +18,6 @@ DISORDER
 0.0 42.4 0.0
 0.0 0.0 42.4 
 
-BATHTYPE
-artificial
-
 # |m><n| lambda(cm^-1) gamma(cm^-1)
 BATH
 

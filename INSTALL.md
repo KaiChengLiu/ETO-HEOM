@@ -71,18 +71,19 @@ Initializes a simulation folder for CPU-based 2DES simulations.
 **Resulting Structure:**
 ```
 JOBNAME_BATHTYPE/
-├── 2d-input/                 # Input .key files
-├── 2d-output/                # Output .out files
-├── pbs-script/               # PBS scripts
-│   ├── pbserr/               # PBS error logs
-│   └── pbslog/               # PBS output logs
-├── key.key-tmpl              # Input template file
-├── gen_2d_data.sh            # Script to generate .key files
-├── clean_2d_data.sh          # Script to clean .key and .out files
-├── gen_2d_spectrum.py        # Script to analyze output
-├── BATHTYPE_ETOM.py          # ETO model for the specified bath type
-├── submit_jobs.sh            # Script to generate & submit PBS jobs (CPU)
-└── README.md                 # Usage of working file
+├── 2d-input/                            # Input .key files
+├── 2d-output/                           # Output .out files
+├── pbs-script/                          # PBS scripts
+│   ├── pbserr/                          # PBS error logs
+│   └── pbslog/                          # PBS output logs
+├── key.key-tmpl                         # Input template file
+├── gen_2d_data.sh                       # Script to generate .key files
+├── clean_2d_data.sh                     # Script to clean .key and .out files
+├── gen_2d_spectrum.py                   # Script to analyze output
+├── BATHTYPE_ETOM.py                     # ETO model for the specified bath type
+├── BATHTYPE_ETOM_example.ipynb          # ETO model example for the specified bath type
+├── submit_jobs.sh                       # Script to generate & submit PBS jobs (CPU)
+└── README.md                            # Usage of working file
 
 ```
 
@@ -107,18 +108,19 @@ Initializes a simulation folder for GPU-based 2DES simulations.
 **Resulting Structure:**
 ```
 JOBNAME_BATHTYPE/
-├── 2d-input/                 # Input .key files
-├── 2d-output/                # Output .out files
-├── pbs-script/               # PBS scripts
-│   ├── pbserr/               # PBS error logs
-│   └── pbslog/               # PBS output logs
-├── key.key-tmpl              # Input template file
-├── gen_2d_data.sh            # Script to generate .key files
-├── clean_2d_data.sh          # Script to clean .key and .out files
-├── gen_2d_spectrum.py        # Script to analyze output
-├── BATHTYPE_ETOM.py          # ETO model for the specified bath type
-├── submit_jobs.sh            # Script to generate & submit PBS jobs (GPU)
-└── README.md                 # Usage of working file
+├── 2d-input/                            # Input .key files
+├── 2d-output/                           # Output .out files
+├── pbs-script/                          # PBS scripts
+│   ├── pbserr/                          # PBS error logs
+│   └── pbslog/                          # PBS output logs
+├── key.key-tmpl                         # Input template file
+├── gen_2d_data.sh                       # Script to generate .key files
+├── clean_2d_data.sh                     # Script to clean .key and .out files
+├── gen_2d_spectrum.py                   # Script to analyze output
+├── BATHTYPE_ETOM.py                     # ETO model for the specified bath type
+├── BATHTYPE_ETOM_example.ipynb          # ETO model example for the specified bath type
+├── submit_jobs.sh                       # Script to generate & submit PBS jobs (GPU)
+└── README.md                            # Usage of working file
 ```
 
 ---

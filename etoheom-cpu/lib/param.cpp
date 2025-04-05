@@ -179,51 +179,43 @@ void param::param_2des(string filename) {
 			this->beta = 1 / (temperature * boltz_k);
 		}
 
-		else if (key_word == "BATHTYPE") {
-			getline(f, line);
-			istringstream bathtype_stream(line);
-			bathtype_stream >> this->bath_type;
-		}
-
 		else if (key_word == "BATH") {
 			//cout << "Reading BATH data" << '\n';
-
-			if (this->bath_type == "artificial") {
-				getline(f, line);
-				istringstream bath_stream(line);
-				double l;
-				bath_stream >> l;
-				for (int i = 0; i < this->K; i++) this->lambda.push_back(l);
-				for (int i = 0; i < this->K; i++) gsl_matrix_complex_set(this->Hal, i + 1, i + 1, gsl_complex_rect(gsl_matrix_complex_get(this->Hal, i + 1, i + 1).dat[0] + this->lambda[i], 0.0));
-				for (int i = 0; i < this->K; i++) {
-					gsl_matrix_complex* m = gsl_matrix_complex_alloc(sys_size, sys_size);
-					gsl_matrix_complex_set_all(m, gsl_complex_rect(0.0, 0.0));
-					gsl_matrix_complex_set(m, i + 1, i + 1, gsl_complex_rect(1.0, 0.0));
-					S.push_back(m);
-				}
-				int n_modes;
-				getline(f, line);
-				istringstream n_modes_stream(line);
-				n_modes_stream >> n_modes;
-				vector<gsl_complex> alpha;
-				vector<gsl_complex> alpha_t;
-				vector<gsl_complex> gamma;
-				for (int i = 0; i < n_modes; i++) {
-					double a, b, g, w;
-					getline(f, line);
-					istringstream modes_stream(line);
-					modes_stream >> a >> b >> g >> w;
-					alpha.push_back(gsl_complex_rect(a, b));
-					alpha_t.push_back(gsl_complex_rect(a, -b));
-					gamma.push_back(gsl_complex_rect(g, w));
-				}
-				for (int i = 0; i < this->K; i++) {
-					this->alpha.push_back(alpha);
-					this->alpha_t.push_back(alpha_t);
-					this->gamma.push_back(gamma);
-				}
-				this->K_m = this->gamma[0].size();
+			getline(f, line);
+			istringstream bath_stream(line);
+			double l;
+			bath_stream >> l;
+			for (int i = 0; i < this->K; i++) this->lambda.push_back(l);
+			for (int i = 0; i < this->K; i++) gsl_matrix_complex_set(this->Hal, i + 1, i + 1, gsl_complex_rect(gsl_matrix_complex_get(this->Hal, i + 1, i + 1).dat[0] + this->lambda[i], 0.0));
+			for (int i = 0; i < this->K; i++) {
+				gsl_matrix_complex* m = gsl_matrix_complex_alloc(sys_size, sys_size);
+				gsl_matrix_complex_set_all(m, gsl_complex_rect(0.0, 0.0));
+				gsl_matrix_complex_set(m, i + 1, i + 1, gsl_complex_rect(1.0, 0.0));
+				S.push_back(m);
 			}
+			int n_modes;
+			getline(f, line);
+			istringstream n_modes_stream(line);
+			n_modes_stream >> n_modes;
+			vector<gsl_complex> alpha;
+			vector<gsl_complex> alpha_t;
+			vector<gsl_complex> gamma;
+			for (int i = 0; i < n_modes; i++) {
+				double a, b, g, w;
+				getline(f, line);
+				istringstream modes_stream(line);
+				modes_stream >> a >> b >> g >> w;
+				alpha.push_back(gsl_complex_rect(a, b));
+				alpha_t.push_back(gsl_complex_rect(a, -b));
+				gamma.push_back(gsl_complex_rect(g, w));
+			}
+			for (int i = 0; i < this->K; i++) {
+				this->alpha.push_back(alpha);
+				this->alpha_t.push_back(alpha_t);
+				this->gamma.push_back(gamma);
+			}
+			this->K_m = this->gamma[0].size();
+			
 		}
 
 		else if (key_word == "PULSE") {
@@ -307,51 +299,42 @@ void param::param_dynamics(string filename) {
 			this->beta = 1 / (temperature * boltz_k);
 		}
 
-		else if (key_word == "BATHTYPE") {
-			getline(f, line);
-			istringstream bathtype_stream(line);
-			bathtype_stream >> this->bath_type;
-		}
-
 		else if (key_word == "BATH") {
 			//cout << "Reading BATH data" << '\n';
-
-			if (this->bath_type == "artificial") {
-				getline(f, line);
-				istringstream bath_stream(line);
-				double l;
-				bath_stream >> l;
-				for (int i = 0; i < this->K; i++) this->lambda.push_back(l);
-				for (int i = 0; i < this->K; i++) gsl_matrix_complex_set(this->Hal, i, i, gsl_complex_rect(gsl_matrix_complex_get(this->Hal, i, i).dat[0] + this->lambda[i], 0.0));
-				for (int i = 0; i < this->K; i++) {
-					gsl_matrix_complex* m = gsl_matrix_complex_alloc(sys_size, sys_size);
-					gsl_matrix_complex_set_all(m, gsl_complex_rect(0.0, 0.0));
-					gsl_matrix_complex_set(m, i, i, gsl_complex_rect(1.0, 0.0));
-					S.push_back(m);
-				}
-				int n_modes;
-				getline(f, line);
-				istringstream n_modes_stream(line);
-				n_modes_stream >> n_modes;
-				vector<gsl_complex> alpha;
-				vector<gsl_complex> alpha_t;
-				vector<gsl_complex> gamma;
-				for (int i = 0; i < n_modes; i++) {
-					double a, b, g, w;
-					getline(f, line);
-					istringstream modes_stream(line);
-					modes_stream >> a >> b >> g >> w;
-					alpha.push_back(gsl_complex_rect(a, b));
-					alpha_t.push_back(gsl_complex_rect(a, -b));
-					gamma.push_back(gsl_complex_rect(g, w));
-				}
-				for (int i = 0; i < this->K; i++) {
-					this->alpha.push_back(alpha);
-					this->alpha_t.push_back(alpha_t);
-					this->gamma.push_back(gamma);
-				}
-				this->K_m = this->gamma[0].size();
+			getline(f, line);
+			istringstream bath_stream(line);
+			double l;
+			bath_stream >> l;
+			for (int i = 0; i < this->K; i++) this->lambda.push_back(l);
+			for (int i = 0; i < this->K; i++) gsl_matrix_complex_set(this->Hal, i, i, gsl_complex_rect(gsl_matrix_complex_get(this->Hal, i, i).dat[0] + this->lambda[i], 0.0));
+			for (int i = 0; i < this->K; i++) {
+				gsl_matrix_complex* m = gsl_matrix_complex_alloc(sys_size, sys_size);
+				gsl_matrix_complex_set_all(m, gsl_complex_rect(0.0, 0.0));
+				gsl_matrix_complex_set(m, i, i, gsl_complex_rect(1.0, 0.0));
+				S.push_back(m);
 			}
+			int n_modes;
+			getline(f, line);
+			istringstream n_modes_stream(line);
+			n_modes_stream >> n_modes;
+			vector<gsl_complex> alpha;
+			vector<gsl_complex> alpha_t;
+			vector<gsl_complex> gamma;
+			for (int i = 0; i < n_modes; i++) {
+				double a, b, g, w;
+				getline(f, line);
+				istringstream modes_stream(line);
+				modes_stream >> a >> b >> g >> w;
+				alpha.push_back(gsl_complex_rect(a, b));
+				alpha_t.push_back(gsl_complex_rect(a, -b));
+				gamma.push_back(gsl_complex_rect(g, w));
+			}
+			for (int i = 0; i < this->K; i++) {
+				this->alpha.push_back(alpha);
+				this->alpha_t.push_back(alpha_t);
+				this->gamma.push_back(gamma);
+			}
+			this->K_m = this->gamma[0].size();
 		}
 
 		else if (key_word == "TIME") {
