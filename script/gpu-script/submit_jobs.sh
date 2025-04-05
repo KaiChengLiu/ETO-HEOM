@@ -7,7 +7,7 @@ HOME_PATH="YOUR_HOME_PATH"
 JOBNAME="YOUR_JOBNAME"
 
 # GPU executable
-GPU_2DES="$HOME_PATH/ETO-HEOM/etoheom-gpu/src/GPU_2DES"
+GPU_2DES="$HOME_PATH/etoheom-gpu/src/GPU_2DES"
 
 # Directories
 INPUT_DIR="./2d-input"

@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Set HOME path prefix
-HOME_PATH="YOUR_PATH"
+HOME_PATH="YOUR_HOME_PATH"
 
 # Set the job name (auto-inserted by setup script)
 JOBNAME="YOUR_JOBNAME"  
 
-CPU_2DES="$HOME_PATH/ETO-HEOM/etoheom-cpu/src/CPU_2DES"
+CPU_2DES="$HOME_PATH/etoheom-cpu/src/CPU_2DES"
 PBS_DIR="."  # Current directory
 OUTPUT_DIR="./2d-output"
 INPUT_DIR="./2d-input"
