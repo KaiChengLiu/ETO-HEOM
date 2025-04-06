@@ -191,10 +191,6 @@ void total_ADO_dynamics_Ht(cublasHandle_t& cublasH, param& key, const data_type*
 	int sys_size = key.sys_size;
 	int total_size = sys_size * sys_size;
 
-	// Allocate temporary memory on device
-	data_type* d_tmp = nullptr;
-	cudaError(cudaMalloc(&d_tmp, total_size * sizeof(data_type)), __FILE__, __LINE__);
-
 	// Loop over all auxiliary density operators (ADO)
 	for (int i = 0; i < key.ado.size(); i++) {
 
@@ -215,14 +211,13 @@ void total_ADO_dynamics_Ht(cublasHandle_t& cublasH, param& key, const data_type*
 			for (int j = 0; j < key.K; j++) {
 				for (int k = 0; k < key.K_m; k++) {
 					int offset = k * key.K + j;
-					if ((int)key.ado[i][offset] != 0) {
-						// Store the multiplication result in a variable before adding
-						data_type gamma_coeff = cuCmulf(MINUS_ONE, make_cuComplex(
-							key.gamma[j][k].x * (int)key.ado[i][offset],
-							key.gamma[j][k].y * (int)key.ado[i][offset]
-						));
-						x = cuCaddf(x, gamma_coeff);
-					}
+					if ((int)key.ado[i][offset] == 0) continue;
+					// Store the multiplication result in a variable before adding
+					data_type gamma_coeff = cuCmulf(MINUS_ONE, make_cuComplex(
+						key.gamma[j][k].x * (int)key.ado[i][offset],
+						key.gamma[j][k].y * (int)key.ado[i][offset]
+					));
+					x = cuCaddf(x, gamma_coeff);
 				}
 			}
 			// Ensure we pass a variable (not an rvalue) to cublasCaxpy
@@ -232,14 +227,15 @@ void total_ADO_dynamics_Ht(cublasHandle_t& cublasH, param& key, const data_type*
 		// Apply upper level terms
 		for (int j = 0; j < key.K; j++) {
 			for (int k = 0; k < key.K_m; k++) {
-				std::string tmp(key.ado[i]);
 				int offset = k * key.K + j;
+				if ((int)key.ado[i][offset] >= key.L) continue;
+				std::string tmp(key.ado[i]);
 				tmp[offset] += 1;
 				if (key.ado_map.find(tmp) != key.ado_map.end()) {
 					int target_idx = key.ado_map.at(tmp);
 
 					// Store computed values before passing to functions
-					data_type x = make_cuComplex(sqrt(((int)key.ado[i][offset] + 1) * cuComplex_abs(key.alpha[j][k])), 0.0);
+					data_type x = make_cuComplex(sqrt(((double)key.ado[i][offset] + 1) * cuComplex_abs(key.alpha[j][k])), 0.0);
 					data_type minus_icnt_x = cuCmulf(MINUS_ICNT, x);
 					data_type icnt_x = cuCmulf(ICNT, x);
 
@@ -260,14 +256,15 @@ void total_ADO_dynamics_Ht(cublasHandle_t& cublasH, param& key, const data_type*
 		if (i != 0) {
 			for (int j = 0; j < key.K; j++) {
 				for (int k = 0; k < key.K_m; k++) {
-					std::string tmp(key.ado[i]);
 					int offset = k * key.K + j;
+					if ((int)key.ado[i][offset] <= 0) continue;
+					std::string tmp(key.ado[i]);
 					tmp[offset] -= 1;
 					if (key.ado_map.find(tmp) != key.ado_map.end()) {
 						int target_idx = key.ado_map.at(tmp);
 
 						// Compute scaling factor
-						data_type y = make_cuComplex(sqrt((int)key.ado[i][offset] / cuComplex_abs(key.alpha[j][k])), 0.0);
+						data_type y = make_cuComplex(sqrt((double)key.ado[i][offset] / cuComplex_abs(key.alpha[j][k])), 0.0);
 
 						// Store results before using in function calls
 						data_type alpha_x = cuCmulf(y, cuCmulf(ICNT, key.alpha[j][k]));
@@ -287,9 +284,6 @@ void total_ADO_dynamics_Ht(cublasHandle_t& cublasH, param& key, const data_type*
 			}
 		}
 	}
-
-	// Free allocated memory
-	cudaError(cudaFree(d_tmp), __FILE__, __LINE__);
 }
 
 void total_ADO_dynamics_Ht_batch(cublasHandle_t& cublasH, param& key, const data_type* d_rho_copy, data_type* d_drho, const data_type* d_Ht, const data_type* const* d_rho_batch, data_type** d_drho_batch, data_type* d_work_space, data_type** d_work_batch, data_type* d_rho_work_space, data_type** d_rho_work_batch, vector<cudaStream_t>& streams) {
