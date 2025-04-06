@@ -26,7 +26,7 @@ mkdir -p "$ERR_DIR"
 mkdir -p "$LOG_DIR"
 
 # Generate PBS script
-SCRIPT_FILE="$./pbs-script/{JOBNAME}_GPU.pbs"
+SCRIPT_FILE="./pbs-script/${JOBNAME}_GPU.pbs"
 cat << EOF > "$SCRIPT_FILE"
 #!/bin/sh
 #PBS -N ${JOBNAME}_GPU
@@ -44,8 +44,6 @@ export LD_LIBRARY_PATH=\$CUDA_HOME/lib64:\$LD_LIBRARY_PATH
 
 cd \$PBS_O_WORKDIR
 
-proc_count=0
-
 for TAU in \$(seq $START_TAU $STEP_TAU $END_TAU); do
     for T in $TLIST; do
         INPUT_FILE="${INPUT_DIR}/key_\${TAU}_\${T}.key"
@@ -56,21 +54,14 @@ for TAU in \$(seq $START_TAU $STEP_TAU $END_TAU); do
             continue
         fi
 
-        ${GPU_2DES} "\$INPUT_FILE" > "\$OUTPUT_FILE" &
-
-        proc_count=\$((proc_count + 1))
-        if [ "\$proc_count" -ge 11 ]; then
-            wait
-            proc_count=0
-        fi
+        echo "Running GPU_2DES on \$INPUT_FILE ..."
+        ${GPU_2DES} "\$INPUT_FILE" > "\$OUTPUT_FILE"
     done
 done
 
-wait
 echo "=== GPU_2DES completed at \$(date) ==="
 source /usr/local/pbs-tools/pbs_epilogue.sh
 EOF
 
 # Submit the job
 qsub "$SCRIPT_FILE"
-
