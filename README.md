@@ -30,7 +30,7 @@ Both versions share the same input/output format and simulation framework.
 
 ## Installation and Job Setup
 
-For instructions on installation, configuration, and how to set up and process jobs, please refer to the `INSTALL` file.
+For instructions on installation, configuration, and how to set up and process jobs, please refer to the `INSTALL` and `tutorial` file.
 
 ---
 
