@@ -11,8 +11,8 @@ etoheom-gpu/src/GPU_dynamics
 *.a
 
 # Compiled folders
-etoheom-cpu/lib/
-etoheom-gpu/lib/
+etoheom-cpu/lib/*.o
+etoheom-gpu/lib/*.o
 
 # Plots or generated output
 *.png
