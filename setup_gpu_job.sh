@@ -34,6 +34,7 @@ mkdir -p "$FOLDER_NAME/pbs-script/pbslog"
 # Copy files into the folder
 cp "$HOME_PATH/script/IO-scripts/key.key-tmpl" "$FOLDER_NAME/"
 cp "$HOME_PATH/gen-2d-spectrum/gen_2d_spectrum.py" "$FOLDER_NAME/"
+cp "$HOME_PATH/gen-2d-spectrum/gen_2d_spectrum_example.ipynb" "$FOLDER_NAME/"
 cp "$HOME_PATH/script/IO-scripts/gen_2d_data.sh" "$FOLDER_NAME/"
 cp "$HOME_PATH/script/IO-scripts/clean_2d_data.sh" "$FOLDER_NAME/"
 cp "$HOME_PATH/script/gpu-script/submit_jobs.sh" "$FOLDER_NAME/"

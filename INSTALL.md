@@ -79,7 +79,8 @@ JOBNAME_BATHTYPE/
 ├── key.key-tmpl                         # Input template file
 ├── gen_2d_data.sh                       # Script to generate .key files
 ├── clean_2d_data.sh                     # Script to clean .key and .out files
-├── gen_2d_spectrum.py                   # Script to analyze output
+├── gen_2d_spectrum.py                   # Script to gen 2d spectrum
+├── gen_2d_spectrum_example.ipynb        # # gen 2d spectrum example
 ├── BATHTYPE_ETOM.py                     # ETO model for the specified bath type
 ├── BATHTYPE_ETOM_example.ipynb          # ETO model example for the specified bath type
 ├── submit_jobs.sh                       # Script to generate & submit PBS jobs (CPU)
