@@ -70,7 +70,7 @@ Initializes a simulation folder for CPU-based 2DES simulations.
 
 **Resulting Structure:**
 ```
-JOBNAME_BATHTYPE/
+CPU_JOBNAME_BATHTYPE/
 ├── 2d-input/                            # Input .key files
 ├── 2d-output/                           # Output .out files
 ├── pbs-script/                          # PBS scripts
@@ -108,7 +108,7 @@ Initializes a simulation folder for GPU-based 2DES simulations.
 
 **Resulting Structure:**
 ```
-JOBNAME_BATHTYPE/
+GPU_JOBNAME_BATHTYPE/
 ├── 2d-input/                            # Input .key files
 ├── 2d-output/                           # Output .out files
 ├── pbs-script/                          # PBS scripts
