@@ -41,7 +41,7 @@ int main(int argc, char** argv)
 	vector<vector<gsl_complex>> p;
 
 	vector<gsl_matrix_complex*> OP(1);
-	for (int i = 0; i < OP.size(); i++) {
+	for (int i = 0; i < 1; i++) {
 		OP[i] = gsl_matrix_complex_alloc(k.sys_size, k.sys_size);
 		gsl_matrix_complex_set_all(OP[i], gsl_complex_rect(0.0, 0.0));
 	}
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
 
 	for (int i = 0; i < P.size(); i++) cout << scientific << setprecision(6) << GSL_REAL(P[i]) << " " << GSL_IMAG(P[i]) << '\n';
 
-	for(int i = 0; i < OP.size(); i++) gsl_matrix_complex_free(OP[i]);
+	for(int i = 0; i < 1; i++) gsl_matrix_complex_free(OP[i]);
 	k.param_free();
 	return 0;
 }
