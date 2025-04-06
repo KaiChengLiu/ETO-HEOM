@@ -1,0 +1,430 @@
+\documentclass{article}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage[utf8]{inputenc}
+
+\geometry{margin=1in}
+\title{ETO-HEOM Tutorial}
+
+\begin{document}
+
+\maketitle
+
+\section*{Quick Start: Workflow Summary}
+
+This section provides a high-level summary of the full workflow. Follow these steps to run a full 2DES simulation using ETO-HEOM:
+
+\begin{enumerate}
+    \item \textbf{Build the Solver}  
+    Compile the CPU and/or GPU solvers:
+    \begin{lstlisting}[language=bash]
+    cd /path/to/ETO-HEOM/
+    make
+    \end{lstlisting}
+
+    \item \textbf{Initialize Working Directory}  
+    Use the setup script to create a simulation workspace:
+    \begin{lstlisting}[language=bash]
+    ./setup_cpu_job.sh JOBNAME BATHTYPE
+    # or
+    ./setup_gpu_job.sh JOBNAME BATHTYPE
+    \end{lstlisting}
+
+    \item \textbf{Edit Template Input File}  
+    Modify \texttt{key.key-tmpl} to set up:
+    \begin{itemize}
+        \item System size, HEOM level, Hamiltonian, Disorder
+        \item Dipole directions, pulse settings, and time domain
+    \end{itemize}
+
+    \item \textbf{Generate Bath Parameters}  
+    Automatically fill in the bath section by executing:
+    \begin{lstlisting}[language=bash]
+    python3 BATHTYPE_ETOM.py
+    # or run BATHTYPE_ETOM_example.ipynb
+    \end{lstlisting}
+
+    \item \textbf{Generate Input Files}  
+    Configure and run the input generation script:
+    \begin{lstlisting}[language=bash]
+    ./gen_2d_data.sh
+    \end{lstlisting}
+
+    \item \textbf{Submit PBS Jobs}  
+    Submit the simulation jobs to the cluster:
+    \begin{lstlisting}[language=bash]
+    ./submit_jobs.sh
+    \end{lstlisting}
+
+    \item \textbf{Wait Until Completion}  
+    Monitor jobs with \texttt{qstat} or log files. Ensure all output files are generated in \texttt{./2d-output}.
+
+    \item \textbf{Analyze Results and Generate 2D Spectrum}  
+    After all jobs finish, analyze the results:
+    \begin{lstlisting}[language=bash]
+    python3 gen_2d_spectrum.py
+    # or run gen_2d_spectrum_example.ipynb
+    \end{lstlisting}
+\end{enumerate}
+
+\vspace{1em}
+For detailed instructions, continue reading the full tutorial below.
+
+\newpage
+
+\section{Build Instructions}
+
+Before setting up any jobs, compile the solvers by running \texttt{make} in the project root:
+
+\begin{lstlisting}[language=bash]
+cd /path/to/ETO-HEOM/
+make
+\end{lstlisting}
+
+This builds the following binaries:
+
+\begin{itemize}
+    \item \texttt{CPU\_2DES} --- CPU-based HEOM 2DES simulator
+    \item \texttt{GPU\_2DES} --- GPU-accelerated HEOM 2DES simulator (if applicable)
+\end{itemize}
+
+Ensure the binaries are placed in their respective \texttt{src/} directories. For example:
+
+\begin{itemize}
+    \item \texttt{etoheom-cpu/src/}
+    \item \texttt{etoheom-gpu/src/}
+\end{itemize}
+
+\section{Job Setup Scripts}
+
+Before using any setup scripts, ensure that the \texttt{HOME\_PATH} variable in the script files is set to the current path of your \texttt{ETO-HEOM} project.
+
+\subsection{CPU Job Setup}
+
+Initializes a simulation folder for CPU-based 2DES simulations.
+
+\subsubsection*{Usage}
+\begin{lstlisting}[language=bash]
+./setup_cpu_job.sh JOBNAME BATHTYPE
+\end{lstlisting}
+
+\subsubsection*{Arguments}
+\begin{itemize}
+    \item \texttt{JOBNAME}: Custom identifier for the simulation (e.g., \texttt{dimer})
+    \item \texttt{BATHTYPE}: Type of spectral density — must be one of:
+    \begin{itemize}
+        \item \texttt{debye\_lorentz}
+        \item \texttt{ohmic}
+        \item \texttt{superohmic}
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Resulting Structure}
+\begin{verbatim}
+    JOBNAME_BATHTYPE/
+    |-- 2d-input/                    # Input .key files
+    |-- 2d-output/                   # Output .out files
+    |-- pbs-script/                  # PBS scripts
+    |   |-- pbserr/                  # PBS error logs
+    |   |-- pbslog/                  # PBS output logs
+    |-- key.key-tmpl                 # Input template file
+    |-- gen_2d_data.sh               # Script to generate .key files
+    |-- clean_2d_data.sh             # Script to clean .key and .out files
+    |-- gen_2d_spectrum.py           # Script to gen 2d spectrum
+    |-- gen_2d_spectrum_example.py   # gen 2d spectrum example
+    |-- BATHTYPE_ETOM.py             # ETO model for the specified bath type
+    |-- BATHTYPE_ETOM_example.ipynb  # ETO model example
+    |-- submit_jobs.sh               # Script to generate & submit PBS jobs (CPU)
+    |-- README.md                    # Usage of working file
+\end{verbatim}
+
+\subsection{GPU Job Setup}
+
+Initializes a simulation folder for GPU-based 2DES simulations.
+
+\subsubsection*{Usage}
+\begin{lstlisting}[language=bash]
+./setup_gpu_job.sh JOBNAME BATHTYPE
+\end{lstlisting}
+
+\subsubsection*{Arguments}
+\begin{itemize}
+    \item \texttt{JOBNAME}: Custom identifier for the simulation (e.g., \texttt{dimer})
+    \item \texttt{BATHTYPE}: Type of spectral density — must be one of:
+    \begin{itemize}
+        \item \texttt{debye\_lorentz}
+        \item \texttt{ohmic}
+        \item \texttt{superohmic}
+    \end{itemize}
+\end{itemize}
+
+\subsubsection*{Resulting Structure}
+\begin{verbatim}
+    JOBNAME_BATHTYPE/
+    |-- 2d-input/                    # Input .key files
+    |-- 2d-output/                   # Output .out files
+    |-- pbs-script/                  # PBS scripts
+    |   |-- pbserr/                  # PBS error logs
+    |   |-- pbslog/                  # PBS output logs
+    |-- key.key-tmpl                 # Input template file
+    |-- gen_2d_data.sh               # Script to generate .key files
+    |-- clean_2d_data.sh             # Script to clean .key and .out files
+    |-- gen_2d_spectrum.py           # Script to gen 2d spectrum
+    |-- gen_2d_spectrum_example.py   # gen 2d spectrum example
+    |-- BATHTYPE_ETOM.py             # ETO model for the specified bath type
+    |-- BATHTYPE_ETOM_example.ipynb  # ETO model example
+    |-- submit_jobs.sh               # Script to generate & submit PBS jobs (GPU)
+    |-- README.md                    # Usage of working file
+\end{verbatim}
+
+\newpage
+
+\section{Template Input Setup}
+
+After setting up your job folder, you must modify the \texttt{key.key-tmpl} file located in the working directory. This is the template input file that defines all system-specific parameters for the simulation.
+
+Update the following sections to reflect your system configuration:
+
+\subsection*{SIZE}
+Define the system size including the ground and first excited states.
+
+\subsection*{HEOM}
+Define the HEOM configuration:
+\begin{itemize}
+    \item Format: \texttt{(SITE\_NUMBER) (TRUNCATION\_LEVEL)}
+\end{itemize}
+
+\subsection*{HAMILTONIAN}
+Define the system Hamiltonian, including the ground and excited states. All values are in cm\textsuperscript{-1}.
+
+\subsection*{DISORDER}
+Static disorder matrix of the Hamiltonian, also in cm\textsuperscript{-1}.  
+\textbf{First row:} number of samples and random seed.
+
+\subsection*{BATH}
+Bath information, automatically generated by \texttt{\{BATHTYPE\}\_ETOM.py}.  
+\textit{You typically do not need to modify this section.}
+
+\subsection*{DIPOLE}
+\begin{itemize}
+    \item First row: Number of transition dipole vectors, usually same as \texttt{(SITE\_NUMBER)}
+    \item Following rows: Dipole direction and amplitude in XYZ components
+\end{itemize}
+
+\subsection*{POLARIZATION}
+Define the polarization angles for the four pulses.  
+\textit{You typically do not need to modify this section.}
+
+\subsection*{PULSE}
+\begin{itemize}
+    \item First row: Number of pulses (currently only supports 3)
+    \item Next 3 rows: Amplitude (\(< 10\) cm\textsuperscript{-1}), central time (fs), width (fs), and frequency (cm\textsuperscript{-1})
+    \item Use placeholders \texttt{TAU1}, \texttt{TAU2}, \texttt{TAU3} that will be replaced automatically by \texttt{gen\_2d\_data.sh}
+\end{itemize}
+
+\subsection*{TIME}
+Simulation time settings:
+\begin{itemize}
+    \item Format: \texttt{start time}, \texttt{end time (T\_END)}, \texttt{time step}, and \texttt{sampling interval}
+    \item \texttt{T\_END} will be replaced dynamically during \texttt{gen\_2d\_data.sh} execution
+\end{itemize}
+
+\newpage
+
+\section{Input File Generation Script}
+
+\subsection*{Modify \texttt{gen\_2d\_data.sh}}
+
+This shell script controls how the 2DES input files are generated. You may adjust the following key parameters at the top of the script:
+
+\begin{itemize}
+    \item \texttt{t0=210} — Initial central time for the first pulse (in fs)
+    \item \texttt{propagate\_time=600} — Duration to propagate after the last pulse (in fs)
+    \item \texttt{tau\_step=10} — Step size for \(\tau_2\) (in fs)
+    \item \texttt{tau\_bound=600} — Upper and lower bounds for \(\tau_2\) offset (in fs)
+    \item \texttt{T=(0)} — Array of population times \(T\) (in fs). You can add more values.
+    \item \texttt{input\_file="key.key-tmpl"} — Path to the input template file
+\end{itemize}
+
+\subsubsection*{Script Functionality}
+
+The script will:
+
+\begin{itemize}
+    \item Loop over values of \(\tau_2\) from \(-\texttt{tau\_bound}\) to \(+\texttt{tau\_bound}\)
+    \item Automatically compute \texttt{TAU1}, \texttt{TAU2}, \texttt{TAU3}, and \texttt{T\_END} based on \texttt{t0}, \texttt{tau\_step}, and each value in \texttt{T}
+    \item Replace placeholders in the template file with computed values
+    \item Output input files as: \texttt{./2d-input/key\_\{tau2\}\_\{T\}.key}
+\end{itemize}
+
+You can modify this script to include more population times or to adjust the pulse timing logic as needed.
+
+\subsection*{Run \texttt{gen\_2d\_data.sh}}
+
+Once the script is configured, execute it to generate input files:
+
+\begin{lstlisting}[language=bash]
+./gen_2d_data.sh
+\end{lstlisting}
+
+The generated input files will be saved in the \texttt{./2d-input} directory.
+
+\subsection*{Clean Input Files: \texttt{clean\_2d\_data.sh}}
+
+To remove all generated input files and reset the input directory, use:
+
+\begin{lstlisting}[language=bash]
+./clean_2d_data.sh
+\end{lstlisting}
+
+This will delete all files inside the \texttt{./2d-input/} folder.
+
+\newpage
+
+\section{Generate Bath Parameters}
+
+After the working directory is created using the setup script, the bath type (\texttt{BATHTYPE}) is already specified and embedded into the directory structure. You do not need to manually modify or set the bath type again.
+
+\subsection*{Execute \texttt{BATHTYPE\_ETOM.py}}
+
+To generate bath parameters for your simulation, run the corresponding Python script inside your working directory. This script will automatically insert bath information into \texttt{key.key-tmpl}:
+
+\begin{lstlisting}[language=bash]
+python3 debye_lorentz_ETOM.py
+\end{lstlisting}
+
+This command calculates the ETO model parameters based on the specified spectral density type and updates the \texttt{BATH} section in the template file accordingly.
+
+\subsection*{Use Jupyter Notebook: \texttt{BATHTYPE\_ETOM\_example.ipynb}}
+
+You may also use the accompanying Jupyter notebook to interactively generate bath parameters:
+
+\begin{itemize}
+    \item Launch the notebook with:
+    \begin{lstlisting}[language=bash]
+    jupyter notebook debye_lorentz_ETOM_example.ipynb
+    \end{lstlisting}
+    \item Execute the notebook cells step-by-step to calculate and visualize the bath parameters.
+\end{itemize}
+
+This method is recommended if you wish to explore or fine-tune the bath model before applying it.
+
+\newpage 
+
+\section{Submit PBS Jobs}
+
+After generating all input files, execute the submission script to generate and submit PBS job scripts.
+
+\subsection*{Run \texttt{submit\_jobs.sh}}
+
+From your working directory, run:
+
+\begin{lstlisting}[language=bash]
+./submit_jobs.sh
+\end{lstlisting}
+
+This script will automatically:
+\begin{itemize}
+    \item Create PBS job scripts for the CPU or GPU version based on your setup
+    \item Divide the \(\tau_2\) range into manageable chunks (CPU only)
+    \item Submit the generated PBS scripts using \texttt{qsub}
+\end{itemize}
+
+\subsection*{Important Parameters to Check}
+
+Before execution, ensure the following variables in \texttt{submit\_jobs.sh} are properly set:
+
+\begin{itemize}
+    \item \texttt{HOME\_PATH} — Automatically set by the setup script
+    \item \texttt{JOBNAME} — Automatically set by the setup script
+    \item \texttt{CPU\_2DES} or \texttt{GPU\_2DES} — Path to your binary executable
+    \item \texttt{INPUT\_DIR} — Should be \texttt{./2d-input}
+    \item \texttt{OUTPUT\_DIR} — Should be \texttt{./2d-output}
+    \item \texttt{ERR\_DIR}, \texttt{LOG\_DIR} — Should point to subfolders inside \texttt{./pbs-script/}
+    \item \texttt{TLIST} — Array of population times \(T\) (e.g., \texttt{0} or \texttt{(0 100 200)})
+    \item \texttt{START\_TAU}, \texttt{END\_TAU}, \texttt{STEP\_TAU} — Define the \(\tau_2\) scan range
+\end{itemize}
+
+\subsection*{PBS Script Generation: CPU Version}
+
+For CPU-based simulations, the script:
+\begin{itemize}
+    \item Splits the \(\tau_2\) scan range into equal parts (\texttt{NUM\_SCRIPTS})
+    \item Generates one PBS script per chunk under \texttt{pbs-script/}
+    \item Submits them using \texttt{qsub}
+\end{itemize}
+
+Each PBS job:
+\begin{itemize}
+    \item Executes up to 11 parallel CPU processes (\texttt{ppn=11})
+    \item Launches \texttt{CPU\_2DES} for each \texttt{key\_\{TAU\}\_\{T\}.key} input
+    \item Outputs result to \texttt{2d-output/out\_\{TAU\}\_\{T\}.out}
+\end{itemize}
+
+\subsection*{PBS Script Generation: GPU Version}
+
+For GPU-based simulations, the script:
+\begin{itemize}
+    \item Generates a single PBS job script under \texttt{pbs-script/}
+    \item Sets GPU-specific resources (e.g., \texttt{nodes=gpu02}, CUDA environment variables)
+\end{itemize}
+
+The job:
+\begin{itemize}
+    \item Executes \texttt{GPU\_2DES} for each input file
+    \item Logs results and errors in \texttt{pbs-script/pbslog} and \texttt{pbs-script/pbserr}
+\end{itemize}
+
+\subsection*{Output}
+
+Submitted PBS jobs will automatically:
+\begin{itemize}
+    \item Read input files from \texttt{./2d-input}
+    \item Write output files to \texttt{./2d-output}
+    \item Write logs to \texttt{./pbs-script/pbslog/}
+    \item Write errors to \texttt{./pbs-script/pbserr/}
+\end{itemize}
+
+Use \texttt{qstat}, \texttt{tail -f}, or PBS web portal to monitor job progress.
+
+\section{Post-Processing: Generate 2D Spectrum}
+
+After all PBS jobs have completed and the output files are available in the \texttt{./2d-output} directory, you can generate the 2D spectrum by running the analysis script.
+
+\subsection*{Execute \texttt{gen\_2d\_spectrum.py}}
+
+This script will parse the output files in \texttt{2d-output/}, perform Fourier transforms over delay times, and assemble the final 2D spectrum data.
+
+To run the script:
+
+\begin{lstlisting}[language=bash]
+python3 gen_2d_spectrum.py
+\end{lstlisting}
+
+\noindent The resulting 2D spectrum will be saved in a format specified within the script (e.g., NumPy arrays, figures, or HDF5 files).
+
+\subsection*{Use Jupyter Notebook: \texttt{gen\_2d\_spectrum\_example.ipynb}}
+
+Alternatively, if you prefer interactive analysis or visualization, you can use the accompanying Jupyter notebook:
+
+\begin{itemize}
+    \item Launch the notebook with:
+    \begin{lstlisting}[language=bash]
+    jupyter notebook gen_2d_spectrum_example.ipynb
+    \end{lstlisting}
+    \item Follow the instructions and code cells to:
+    \begin{itemize}
+        \item Load output data
+        \item Apply any windowing or filtering
+        \item Compute the 2D Fourier transform
+        \item Plot the 2D spectrum using Matplotlib
+    \end{itemize}
+\end{itemize}
+
+This notebook is useful for adjusting analysis parameters and visually verifying results.
+
+
+\end{document}
