@@ -14,7 +14,6 @@ ERR_DIR="./pbs-script/pbserr"
 LOG_DIR="./pbs-script/pbslog"
 
 TLIST="0"
-FLIST="100"
 START_TAU=-600
 END_TAU=600
 STEP_TAU=10
@@ -49,23 +48,21 @@ proc_count=0
 
 for TAU in \$(seq $START $STEP_TAU $END); do
     for T in $TLIST; do
-        for F in $FLIST; do
-            INPUT_FILE="${INPUT_DIR}/key_\${TAU}_\${T}.key"
-            OUTPUT_FILE="${OUTPUT_DIR}/out_\${TAU}_\${T}.out"
+        INPUT_FILE="${INPUT_DIR}/key_\${TAU}_\${T}.key"
+        OUTPUT_FILE="${OUTPUT_DIR}/out_\${TAU}_\${T}.out"
 
-            if [ ! -f "\$INPUT_FILE" ]; then
-                echo "Input file \$INPUT_FILE does not exist!" >> \$PBS_O_WORKDIR/${ERR_DIR}/missing_inputs_${i}.log
-                continue
-            fi
+        if [ ! -f "\$INPUT_FILE" ]; then
+            echo "Input file \$INPUT_FILE does not exist!" >> \$PBS_O_WORKDIR/${ERR_DIR}/missing_inputs_${i}.log
+            continue
+        fi
 
-            ${CPU_2DES} "\$INPUT_FILE" > "\$OUTPUT_FILE" &
+        ${CPU_2DES} "\$INPUT_FILE" > "\$OUTPUT_FILE" &
 
-            proc_count=\$((proc_count + 1))
-            if [ "\$proc_count" -ge 11 ]; then
-                wait
-                proc_count=0
-            fi
-        done
+        proc_count=\$((proc_count + 1))
+        if [ "\$proc_count" -ge 11 ]; then
+            wait
+            proc_count=0
+        fi
     done
 done
 
