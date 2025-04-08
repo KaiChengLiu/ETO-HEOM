@@ -121,6 +121,7 @@ void total_ADO_dynamics_Ht(param& key, const vector<gsl_matrix_complex*>& rho_co
 	int K_m = key.K_m;
 	gsl_matrix_complex* tmp = gsl_matrix_complex_alloc(sys_size, sys_size);
 
+	#pragma omp parallel for
 	for (int i = 0; i < key.ado.size(); i++) {
 		//L_s
 		gsl_blas_zgemm(CblasNoTrans, CblasNoTrans, ICNT, rho_copy[i], Ht, ZERO, drho[i]);

@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -Wall -Wno-sign-compare -Wno-endif-labels -Wno-unused-variable -O3 -std=c++14
+CXXFLAGS = -Wall -Wno-sign-compare -Wno-endif-labels -Wno-unused-variable -O3 -std=c++14 -fopenmp
 
 # Include directories for GSL, other headers, and the library directory
 INCLUDES = -I/usr/include -I../lib
