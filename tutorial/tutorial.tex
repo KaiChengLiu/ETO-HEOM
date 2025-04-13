@@ -15,11 +15,11 @@
 
 \section*{Quick Start: Workflow Summary}
 
-This section provides a high-level summary of the full workflow. Follow these steps to run a full 2DES simulation using ETO-HEOM:
+This section provides a summary of the full workflow. Follow these steps to run a full 2DES simulation using ETO-HEOM:
 
 \begin{enumerate}
     \item \textbf{Build the Solver}  
-    Compile the CPU and/or GPU solvers:
+    Modify the compiler and linking path to fit your sustem and compile the CPU and/or GPU solvers:
     \begin{lstlisting}[language=bash]
     cd /path/to/ETO-HEOM/
     make
@@ -31,10 +31,6 @@ This section provides a high-level summary of the full workflow. Follow these st
     ./setup_cpu_job.sh JOBNAME BATHTYPE
     # or
     ./setup_gpu_job.sh JOBNAME BATHTYPE
-    \end{lstlisting}
-    then go to the working space
-    \begin{lstlisting}[language=bash]
-    cd CPU(GPU)\_JOBNAME\_BATHTYPE
     \end{lstlisting}
 
     \item \textbf{Edit Template Input File}  
@@ -81,26 +77,35 @@ For detailed instructions, continue reading the full tutorial below.
 
 \section{Build Instructions}
 
-Before setting up any jobs, compile the solvers by running \texttt{make} in the project root:
+Before setting up any jobs, first check the compiler configuration to fit your system.
+You can modify the following variables in the Makefile if needed:
 
 \begin{lstlisting}[language=bash]
-cd /path/to/ETO-HEOM/
-make
+    # C++ compiler and flags
+    CXX := g++
+    
+    # CUDA compiler and flags
+    NVCC := $/path/to/cuda-XX.X/bin/nvcc
+    
+    # Include and library paths
+    INCLUDES := -I/usr/include
+    CUDA_INC := -I$/path/to/cuda-XX.X/include
+    CUDA_LIB := -L$/path/to/cuda-XX.X/lib64
 \end{lstlisting}
-
-This builds the following binaries:
-
-\begin{itemize}
-    \item \texttt{CPU\_2DES} --- CPU-based HEOM 2DES simulator
-    \item \texttt{GPU\_2DES} --- GPU-accelerated HEOM 2DES simulator (if applicable)
-\end{itemize}
-
-Ensure the binaries are placed in their respective \texttt{src/} directories. For example:
-
-\begin{itemize}
-    \item \texttt{etoheom-cpu/src/}
-    \item \texttt{etoheom-gpu/src/}
-\end{itemize}
+Now you can compile the ETO-HEOM using the unified Makefile in the project root:
+\begin{lstlisting}[language=bash]
+    cd /path/to/ETO-HEOM/
+    make
+\end{lstlisting}
+If you only want to build one version:
+\begin{lstlisting}[language=bash]
+    make cpu        # Build only CPU version
+    make gpu        # Build only GPU version
+\end{lstlisting}
+To clean all build artifacts:
+\begin{lstlisting}[language=bash]
+    make clean      # Remove all object files and binaries
+\end{lstlisting}
 
 \section{Job Setup Scripts}
 
