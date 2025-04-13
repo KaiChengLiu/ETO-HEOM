@@ -29,25 +29,46 @@ The code is developed for Linux systems with support for both CPU and NVIDIA GPU
 
 ## Build Instructions
 
-Before setting up any jobs, compile the solvers by running `make` in the project root:
+Before setting up any jobs, first check the compiler configuration to fit your system,
+you can modify these variables accordingly:
+```make
+CXX := g++
+CXXFLAGS := -Wall -Wno-sign-compare -Wno-endif-labels -Wno-unused-variable -O3 -std=c++14
 
+# CUDA compiler and flags
+NVCC := $/path/to/cuda-XX.X/bin/nvcc
+NVCCFLAGS := -g -Xcompiler="-Wall -Wno-sign-compare -Wno-endif-labels -Wno-unused-variable" -O3 -std=c++14
+
+# Include and library paths
+INCLUDES := -I/usr/include
+CUDA_INC := -I$/path/to/cuda-XX.X/include
+CUDA_LIB := -L$/path/to/cuda-XX.X/lib64
+```
+
+After compilation, the following binaries will be generated in their respective directories:
+```bash
+etoheom-cpu/src/CPU_2DES
+etoheom-cpu/src/CPU_dynamics
+etoheom-gpu/src/GPU_2DES
+etoheom-gpu/src/GPU_dynamics
+```
+
+Now you can compile the ETO-HEOM using the unified Makefile in the project root:
 ```bash
 cd /path/to/ETO-HEOM/
 make
 ```
 
-This builds the following binaries:
-
-- **CPU_2DES** — CPU-based HEOM 2DES simulator  
-- **GPU_2DES** — GPU-accelerated HEOM 2DES simulator (if applicable)
-
-Ensure the binaries are placed in their respective `src/` directories, e.g.:
-
-```
-etoheom-cpu/src/
-etoheom-gpu/src/
+If you only want to build one version:
+```bash
+make cpu        # Build only CPU version
+make gpu        # Build only GPU version
 ```
 
+To clean all build artifacts:
+```bash
+make clean      # Clean all object files and binaries
+```
 ---
 
 ## Job Setup Scripts
