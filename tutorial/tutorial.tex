@@ -85,12 +85,12 @@ You can modify the following variables in the Makefile if needed:
     CXX := g++
     
     # CUDA compiler and flags
-    NVCC := $/path/to/cuda-XX.X/bin/nvcc
+    NVCC := /path/to/cuda-XX.X/bin/nvcc
     
     # Include and library paths
     INCLUDES := -I/usr/include
-    CUDA_INC := -I$/path/to/cuda-XX.X/include
-    CUDA_LIB := -L$/path/to/cuda-XX.X/lib64
+    CUDA_INC := -I/path/to/cuda-XX.X/include
+    CUDA_LIB := -L/path/to/cuda-XX.X/lib64
 \end{lstlisting}
 Now you can compile the ETO-HEOM using the unified Makefile in the project root:
 \begin{lstlisting}[language=bash]
