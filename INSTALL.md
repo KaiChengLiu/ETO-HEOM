@@ -36,13 +36,13 @@ CXX := g++
 CXXFLAGS := -Wall -Wno-sign-compare -Wno-endif-labels -Wno-unused-variable -O3 -std=c++14
 
 # CUDA compiler and flags
-NVCC := $/path/to/cuda-XX.X/bin/nvcc
+NVCC := /path/to/cuda-XX.X/bin/nvcc
 NVCCFLAGS := -g -Xcompiler="-Wall -Wno-sign-compare -Wno-endif-labels -Wno-unused-variable" -O3 -std=c++14
 
 # Include and library paths
 INCLUDES := -I/usr/include
-CUDA_INC := -I$/path/to/cuda-XX.X/include
-CUDA_LIB := -L$/path/to/cuda-XX.X/lib64
+CUDA_INC := -I/path/to/cuda-XX.X/include
+CUDA_LIB := -L/path/to/cuda-XX.X/lib64
 ```
 
 After compilation, the following binaries will be generated in their respective directories:
