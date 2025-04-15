@@ -127,6 +127,11 @@ and run:
 
   This script executes the GPU-accelerated 2DES simulations and generates the same output format.
 
+  For more detailed instructions, check 
+  ```bash
+  /path/to/ETOM/script/cpu(gpu)-script/README.md
+  ```
+
 ---
 
 ### 5. Generate 2D Spectrum
