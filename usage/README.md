@@ -55,7 +55,29 @@ These files include time-domain configurations for each TAU and T combination.
 
 ### 4. Submit Simulation Jobs
 
-- **For CPU version**, submit the batch job using:
+- **For CPU version**, adjust the PATH and time varibles to match your work:
+```bash
+# Set HOME path prefix
+HOME_PATH="YOUR_HOME_PATH"
+
+# Set the job name (auto-inserted by setup script)
+JOBNAME="YOUR_JOBNAME"  
+
+CPU_2DES="$HOME_PATH/etoheom-cpu/src/CPU_2DES"
+PBS_DIR="."  # Current directory
+OUTPUT_DIR="./2d-output"
+INPUT_DIR="./2d-input"
+ERR_DIR="./pbs-script/pbserr"
+LOG_DIR="./pbs-script/pbslog"
+
+TLIST="0"
+START_TAU=-600
+END_TAU=600
+STEP_TAU=10
+NUM_SCRIPTS=8
+```
+
+submit the batch job using:
 
   ```bash
   ./submit_jobs.sh
@@ -67,7 +89,37 @@ These files include time-domain configurations for each TAU and T combination.
   ./2d-output/out_{TAU}_{T}.out
   ```
 
-- **For GPU version**, directly run:
+- **For GPU version**, adjust the PATH and time varibles to match your work:
+```bash
+# Set HOME path
+HOME_PATH="YOUR_HOME_PATH"
+
+# Job name (auto set by setup script)
+JOBNAME="YOUR_JOBNAME"
+
+# GPU executable
+GPU_2DES="$HOME_PATH/etoheom-gpu/src/GPU_2DES"
+
+# Directories
+INPUT_DIR="./2d-input"
+OUTPUT_DIR="./2d-output"
+ERR_DIR="./pbs-script/pbserr"
+LOG_DIR="./pbs-script/pbslog"
+
+# TAU and T settings
+TLIST="0"
+START_TAU=-600
+END_TAU=600
+STEP_TAU=10
+```
+Second, for GPU jobs, it is necessary to set up cuda enviroment in subnit script to access GPU 
+```bash
+export CUDA_HOME=/usr/local/cuda-XX.XX
+export PATH=\$CUDA_HOME/bin:\$PATH
+export LD_LIBRARY_PATH=\$CUDA_HOME/lib64:\$LD_LIBRARY_PATH
+```
+
+and run:
 
   ```bash
   ./Run_GPU_2DES.sh
