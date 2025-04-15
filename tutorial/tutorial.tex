@@ -360,6 +360,13 @@ Before execution, ensure the following variables in \texttt{submit\_jobs.sh} are
     \item \texttt{START\_TAU}, \texttt{END\_TAU}, \texttt{STEP\_TAU} — Define the \(\tau_2\) scan range
 \end{itemize}
 
+For the GPU submit script, it is necessary to setup cuda environment to access GPU correctly
+\begin{lstlisting}[language=bash]
+    export CUDA_HOME=/usr/local/cuda-XX.X
+    export PATH=\$CUDA_HOME/bin:\$PATH
+    export LD_LIBRARY_PATH=\$CUDA_HOME/lib64:\$LD_LIBRARY_PATH
+\end{lstlisting}
+
 \subsection*{PBS Script Generation: CPU Version}
 
 For CPU-based simulations, the script:
