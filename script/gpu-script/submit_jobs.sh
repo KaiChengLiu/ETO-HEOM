@@ -38,6 +38,7 @@ cat << EOF > "$SCRIPT_FILE"
 
 source /usr/local/pbs-tools/pbs_prologue.sh
 
+#load cuda environment 
 export CUDA_HOME=/usr/local/cuda-11.8
 export PATH=\$CUDA_HOME/bin:\$PATH
 export LD_LIBRARY_PATH=\$CUDA_HOME/lib64:\$LD_LIBRARY_PATH
