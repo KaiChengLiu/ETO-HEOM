@@ -77,17 +77,11 @@ NUM_SCRIPTS=8     # Number of PBS jobs to submit (splits TAU range into 8 parts)
 ### Usage
 
 ```bash
-bash submit_jobs.sh <JOBNAME>
-```
-
-Example:
-
-```bash
-bash submit_jobs.sh my2desrun
+./submit_jobs.sh
 ```
 
 This will create and submit 8 PBS scripts:
-- `pbs-script/my2desrun_1.pbs` to `pbs-script/my2desrun_8.pbs`
+- `pbs-script/JOBNAME_1.pbs` to `pbs-script/JOBNAME_8.pbs`
 - Logs will be stored in `pbs-script/pbserr/` and `pbs-script/pbslog/`
 
 ---
