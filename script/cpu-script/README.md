@@ -68,9 +68,8 @@ NUM_SCRIPTS=8     # Number of PBS jobs to submit (splits TAU range into 8 parts)
 - For each batch:
   - Generates a PBS script (`${JOBNAME}_${i}.pbs`) with the correct TAU range
   - Each script:
-    - Loops through all combinations of `TAU`, `T`, and `F`
-    - Runs simulations in parallel (up to 11 at a time)
-    - Handles missing input files by logging to `missing_inputs_{i}.log`
+    - Loops through all combinations of `TAU`, `T`
+    - Runs simulations in parallel (up to 11 at a time
     - Outputs standard logs and errors to the `pbslog` and `pbserr` folders
   - Automatically submits the PBS job using `qsub`
 
