@@ -29,7 +29,7 @@ This script is designed to **run a batch of 2DES simulations** on a single node 
 
 ### Output
 
-- Results are written to `../2d_output/out_{TAU}_{T}.out`
+- Results are wrten to `../2d_output/out_{TAU}_{T}.out`
 - Errors from missing inputs are appended to `error.log`
 - PBS logs and errors go to `Run_CPU_2DES.pbslog` and `Run_CPU_2DES.pbserr`
 
@@ -42,8 +42,8 @@ This is a **meta-script** that automatically generates and submits **multiple PB
 ### Parameters
 
 ```bash
-HOME_PATH="/home/andrew91411"         # User's home path
-JOBNAME="$1"                          # Name prefix for each job (passed as script argument)
+HOME_PATH="/path.to/ETO-HEOM"         # User's home path
+JOBNAME="JOBNAME"                          # Name prefix for each job (passed as script argument)
 CPU_2DES="$HOME_PATH/ETO-HEOM/etoheom-cpu/src/CPU_2DES"  # Path to the simulation executable
 
 INPUT_DIR="./2d-input"               # Input files directory
@@ -55,7 +55,6 @@ LOG_DIR="./pbs-script/pbslog"        # Output log directory
 
 ```bash
 TLIST="0"         # Population time list
-FLIST="100"       # Dummy loop variable (e.g., pulse width or field strength)
 START_TAU=-600    # Start of TAU scan
 END_TAU=600       # End of TAU scan
 STEP_TAU=10       # Step of TAU
