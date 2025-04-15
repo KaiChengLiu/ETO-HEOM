@@ -253,7 +253,7 @@ Simulation time settings:
 This shell script controls how the 2DES input files are generated. You may adjust the following key parameters at the top of the script:
 
 \begin{itemize}
-    \item \texttt{t0} — Initial central time for the first pulse (in fs). It is recommanded to set \texttt{t0} to $2 * pulse\ width + 10$ ,ensuring it cover the pulse envelop.
+    \item \texttt{t0} — Initial central time for the first pulse (in fs). It is recommanded to set \texttt{t0} to $2 * pulse\ width + 10$, ensuring it cover the pulse envelop.
     \item \texttt{propagate\_time} — Duration to propagate after the last pulse (in fs). 600 fs is recommanded.
     \item \texttt{tau\_step} — Step size for coherent time between different files. (in fs) 10 fs is recommanded.
     \item \texttt{tau\_bound} — Upper and lower bounds for coherent time (in fs, \texttt{-tau\_bound} to \texttt{tau\_bound})
@@ -266,7 +266,7 @@ This shell script controls how the 2DES input files are generated. You may adjus
 The script will:
 
 \begin{itemize}
-    \item Loop over values of coherent time from \(-\texttt{tau\_bound}\) to \(+\texttt{tau\_bound}\)
+    \item Loop over values of coherent time from \(-\texttt{tau\_bound}\) to \(\texttt{tau\_bound}\)
     \item Automatically compute \texttt{TAU1}, \texttt{TAU2}, \texttt{TAU3}, and \texttt{T\_END} based on \texttt{t0}, \texttt{tau\_step}, and each value in \texttt{T}
     \item Replace placeholders in the template file with computed values
     \item Output input files as: \texttt{./2d-input/key\_\{tau2\}\_\{T\}.key}
